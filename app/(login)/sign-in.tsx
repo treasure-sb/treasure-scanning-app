@@ -38,8 +38,6 @@ const SignIn = () => {
   const [phoneVerify, setPhoneVerify] = useState(false)
   const [printBadFormat, setPrintBadFormat] = useState(false)
   const [badFormatString, setBadFormatString] = useState('')
-  console.log(phoneVerify)
-  console.log(form.phoneNum)
   
 
   return (
