@@ -22,7 +22,7 @@ const CustomButton: React.FC<Props> = ({
    isLoading
 }) =>{
     return (
-        <StyledView className="w-[100%] h-[20%] items-center">
+        <StyledView className="w-full h-full items-center">
             <StyledTouchableOpacity 
             onPress={handlePress}
             activeOpacity={0.7}
@@ -31,7 +31,7 @@ const CustomButton: React.FC<Props> = ({
             style = {{
                 borderRadius: 25,
                 backgroundColor: "#73D08D",
-                width: "40%",
+                width: "35%",
                 height: 50
             }}
             >

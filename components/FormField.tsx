@@ -54,6 +54,7 @@ const FormField: React.FC<Props> = ({
           keyboardType = {keyboardType}
           onChangeText={handleChangeText}
           //autoComplete={autoComplete}
+          autoCapitalize='none'
 
           />
       </StyledView>
