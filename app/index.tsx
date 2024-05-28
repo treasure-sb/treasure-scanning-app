@@ -10,7 +10,6 @@ const StyledView = styled(View)
 const StyledSafeAreaView = styled(SafeAreaView)
 const StyledText = styled(Text)
 const StyledImage = styled(Image)
-const StyledScrollView = styled(ScrollView)
 
 
 export default function App() {
@@ -21,12 +20,11 @@ export default function App() {
             <StyledView className="w-full h-full pt-64 items-center" >
                 <StyledImage className="align-bottom w-full h-[100px] "  resizeMode = 'contain' source={require('../assets/images/web_logo.png')} />
                 <StyledText className = "text-white text pt-1 text-base font-semibold">For Hosts</StyledText>
-                <StatusBar style="auto" />
-                <Link href="/scanner" style = {{color: 'green'}}> Go to Scanner </Link>
-                <StyledView className="w-full h-full items-center pt-32"><CustomButton title = "Log In" handlePress={() => router.push('/sign-in')} /></StyledView>
-                <StatusBar backgroundColor="#161622" style="light" />
+                <Link href="/scanner" style = {{color: 'green'}} className="pb-32"> Go to Scanner </Link>
+                <CustomButton title = "Log In" handlePress={() => router.push('./sign-in')} />
+                
             </StyledView>
-            
+            <StatusBar backgroundColor="#161622" style="light" />
         </StyledSafeAreaView>
     );
 }

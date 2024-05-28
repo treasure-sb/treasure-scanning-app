@@ -1,8 +1,9 @@
-import { TouchableOpacity, Text } from "react-native"
+import { TouchableOpacity, Text, View } from "react-native"
 import React from 'react'
 import { styled } from "nativewind";
 const StyledTouchableOpacity = styled(TouchableOpacity)
 const StyledText = styled(Text)
+const StyledView = styled(View)
 
 export type Props = {
     title: string;
@@ -21,17 +22,17 @@ const CustomButton: React.FC<Props> = ({
    isLoading
 }) =>{
     return (
-
-        <StyledTouchableOpacity 
+        <StyledView className="w-[100%] h-[20%] items-center">
+            <StyledTouchableOpacity 
             onPress={handlePress}
             activeOpacity={0.7}
-            className = {`bg-white rounded-xl min-h-[62px] justify-center items-center ${containerStyles} ${isLoading ? 'opacity-50':''}`}
+            className = {`bg-white rounded-xl h-[62px] justify-center items-center ${containerStyles} ${isLoading ? 'opacity-50':''}`}
             disabled={isLoading}
             style = {{
                 borderRadius: 25,
                 backgroundColor: "#73D08D",
                 width: "40%",
-                height: "10%"
+                height: 50
             }}
             >
             <StyledText style={{
@@ -40,6 +41,8 @@ const CustomButton: React.FC<Props> = ({
                 fontSize: 20
             }}>{title}</StyledText>
         </StyledTouchableOpacity>
+        </StyledView>
+        
 
     )
 }

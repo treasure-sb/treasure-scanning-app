@@ -1,11 +1,13 @@
+import { StatusBar } from "expo-status-bar";
 import { getBackgroundColorAsync } from "expo-system-ui";
-import { StatusBar, StyleSheet, Text, View } from "react-native-web";
+import { StyleSheet, Text, View } from "react-native";
+
 
 export default function App() {
     return(
         <View style={styles.container}>
             <Text>QR Code Scanner</Text>
-            <StatusBar style="auto" />
+            <StatusBar backgroundColor="#161622" style='light'/>
         </View>
     );
 }
@@ -13,7 +15,7 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        getBackgroundColor: '#fff',
+        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent:'center',
     }
