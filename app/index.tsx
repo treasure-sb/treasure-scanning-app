@@ -21,6 +21,9 @@ export default function App() {
                 <StyledImage className="align-bottom w-full h-[100px] "  resizeMode = 'contain' source={require('../assets/images/web_logo.png')} />
                 <StyledText className = "text-white text pt-1 text-base font-semibold">For Hosts</StyledText>
                 <Link href="/scanner" style = {{color: 'green'}} className="mb-32"> Go to Scanner </Link>
+                {//TODO remove later
+                }
+                <Link href="./(events)/my-events" style = {{color: 'green'}} className="mb-32"> Go to Events </Link>
                 <CustomButton title = "Log In" handlePress={() => router.push('./sign-in')} />
                 
             </StyledView>

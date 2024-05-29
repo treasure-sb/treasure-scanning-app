@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { TouchableWithoutFeedback } from 'react-native'
 import { styled } from 'nativewind';
 import { OtpInput } from "react-native-otp-entry";
-import { useLocalSearchParams } from 'expo-router';
-import { supabase, verifyMessageData } from '@/lib/supabase';
+import { router, useLocalSearchParams } from 'expo-router';
+import { supabase, verifyMessageData, } from '@/lib/supabase';
 import Toast from 'react-native-toast-message';
 import Header from '@/components/header';
 
@@ -26,15 +26,12 @@ const formatPhoneNumber = (phoneNumber: any) => {
 
 const asyncisVerified = async (info: any, code:string, type:any) => {
     const  verificationResult = await verifyMessageData(info, code, type)
+    console.log(type)
     console.log(verificationResult)
-    console.log(code)
+    
     setTimeout(()=>{
-        {verificationResult.user ? Toast.show({
-            type: 'success',
-            text1: 'OTP Success!',
-            text2: 'Your OTP verification was a succes!',
-            position:'bottom'
-        }) : Toast.show({
+        {verificationResult.user ? 
+            router.push('../(events)/my-events') : Toast.show({
             type: 'error',
             text1: "OTP Error",
             text2: 'Your OTP verification failed, likely due to a wrong code',
@@ -45,11 +42,10 @@ const asyncisVerified = async (info: any, code:string, type:any) => {
     
 } 
 
-
 const otpCode = () => {
     const [code, setCode] = useState('')
     const {info, type} = useLocalSearchParams()
-
+    {console.log({info})}
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <StyledSafeAreaView 
@@ -66,7 +62,7 @@ const otpCode = () => {
         </StyledView>
         <StyledView className='items-start px-[72px] mb-4 w-auto'>
             <StyledText className='text-base justify-start' style={{color:"#535252", lineHeight:20}}>Enter the code we sent to</StyledText>
-            <StyledText className='justify-start text-lg' style={{color:"white", lineHeight:20}}>{formatPhoneNumber(info)}</StyledText>
+            <StyledText className='justify-start text-lg' style={{color:"white", lineHeight:20}}>{type === "phone" ? formatPhoneNumber(info) : info ? info[0] : null}</StyledText>
           </StyledView>
         <OtpInput numberOfDigits={6} onTextChange={(text) => setCode(text)} 
             blurOnFilled={true}
