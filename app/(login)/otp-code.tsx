@@ -6,6 +6,7 @@ import { OtpInput } from "react-native-otp-entry";
 import { useLocalSearchParams } from 'expo-router';
 import { supabase, verifyMessageData } from '@/lib/supabase';
 import Toast from 'react-native-toast-message';
+import Header from '@/components/header';
 
 const StyledView = styled(View);
 const StyledSafeAreaView = styled(SafeAreaView);
@@ -57,6 +58,7 @@ const otpCode = () => {
           backgroundColor: "#0D0F0E"
         }}
       >
+        <Header />
         <StyledView className="w-full items-center px-4 mt-6 mb-2">
           <StyledText className="text-white text-2xl font-bold mb-6">
             Enter Code

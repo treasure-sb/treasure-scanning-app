@@ -1,16 +1,22 @@
 import { View, Text, SafeAreaView, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from 'nativewind';
 import FormField from '@/components/FormField';
 import CustomButton from '@/components/CustomButton';
 import { supabase, handleInfoSubmit } from '@/lib/supabase';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import Toast from 'react-native-toast-message';
+import Header from '@/components/header';
 const StyledView = styled(View);
 const StyledSafeAreaView = styled(SafeAreaView);
 const StyledText = styled(Text);
 
 const SignIn = () => {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
   const [form, setForm] = useState({
     phoneNum: '',
     email: ''
@@ -49,6 +55,7 @@ const SignIn = () => {
           backgroundColor: "#0D0F0E"
         }}
       >
+        <Header />
         <StyledView className="w-full items-center px-4 mt-6 mb-4">
           <StyledText className="text-white text-2xl font-bold mb-12">
             Welcome to Treasure
@@ -77,7 +84,7 @@ const SignIn = () => {
                 }
                 else{
                   handleInfoSubmit(form.email, useEmail)
-                  router.push({pathname:'./otp-code', params: {input:form.email, type: "email"} })
+                  router.replace({pathname:'./otp-code', params: {input:form.email, type: "email"} })
                 }
                 
               }
