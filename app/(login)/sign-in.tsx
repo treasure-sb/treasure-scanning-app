@@ -3,39 +3,13 @@ import React, { useState } from 'react';
 import { styled } from 'nativewind';
 import FormField from '@/components/FormField';
 import CustomButton from '@/components/CustomButton';
-import { supabase } from '@/lib/supabase';
-import { router } from 'expo-router';
-
+import { supabase, handleInfoSubmit } from '@/lib/supabase';
+import { router, useLocalSearchParams } from 'expo-router';
+import Toast from 'react-native-toast-message';
 const StyledView = styled(View);
 const StyledSafeAreaView = styled(SafeAreaView);
 const StyledText = styled(Text);
-const countryCode = "+1";
 
-/*const { data, error } = await supabase.auth.signInWithOtp({
-  email: '',
-  options: {
-    shouldCreateUser: false
-  }
-})
-
-const { data: { session }, error } = await supabase.auth.verifyOtp({
-  email: '',
-  token: '',
-  type: 'email',
-})
-*/
-
-/*const handlePhoneSubmit = async(phoneNumber: string) =>{
-  const formattedPhoneNumber = `${countryCode}${phoneNumber}`
-  const sendMsgData = await supabase.auth.signInWithOtp({
-    phone: formattedPhoneNumber,
-  })
-const verifyMessageData = await supabase.auth.verifyOtp({
-  phone: '+13334445555',
-  token: '123456',
-  type: 'sms',
-})
-}*/
 const SignIn = () => {
   const [form, setForm] = useState({
     phoneNum: '',
@@ -65,7 +39,7 @@ const SignIn = () => {
   const [phoneVerify, setPhoneVerify] = useState(false)
   const [printBadFormat, setPrintBadFormat] = useState(false)
   const [badFormatString, setBadFormatString] = useState('')
-
+  const params = useLocalSearchParams()
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -102,7 +76,8 @@ const SignIn = () => {
                   setPrintBadFormat(true)
                 }
                 else{
-                  router.push('./otp-code')
+                  handleInfoSubmit(form.email, useEmail)
+                  router.push({pathname:'./otp-code', params: {input:form.email, type: "email"} })
                 }
                 
               }
@@ -110,12 +85,13 @@ const SignIn = () => {
                 if (!phoneVerify){
                   setBadFormatString('Phone number has incorrect format.. ex: 5555555555')
                   setPrintBadFormat(true)
+
                 }
                 else{
-                  router.push('./otp-code')
+                  handleInfoSubmit(form.phoneNum, useEmail)
+                  router.push({pathname:'./otp-code', params: {info:form.phoneNum, type: "phone"} })
                 }
               }
-              
             }} />
             <StyledText className='text-red-600 text-sm pt-6'>{printBadFormat ? badFormatString : null} </StyledText>
           </StyledView>
