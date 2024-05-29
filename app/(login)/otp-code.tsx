@@ -23,16 +23,16 @@ const otpCode = () => {
             Enter Code
           </StyledText>
         </StyledView>
-        <StyledView className='items-start px-[72px] mb-4'>
-            <StyledText className='text-base justify-start' style={{color:"#535252"}}>Enter the code we sent to</StyledText>
-            <StyledText className='justify-start text-base' style={{color:"white"}}>{info}</StyledText>
+        <StyledView className='items-start px-[72px] mb-4 w-auto'>
+            <StyledText className='text-base justify-start' style={{color:"#535252", lineHeight:20}}>Enter the code we sent to</StyledText>
+            <StyledText className='justify-start text-lg' style={{color:"white", lineHeight:20}}>{info}</StyledText>
           </StyledView>
         <OtpInput numberOfDigits={6} onTextChange={(text) => console.log(text)} 
             blurOnFilled={true}
             theme={{
                 containerStyle: {width:"auto", transform:[{scale:.66}]},
                 pinCodeContainerStyle:{borderBottomColor: "#535252",
-                    borderBottomWidth: 2, borderLeftWidth:0, borderRightWidth: 0, borderTopWidth:0, borderRadius: 0, },
+                    borderBottomWidth: 2, borderLeftWidth:0, borderRightWidth: 0, borderTopWidth:0, borderRadius: 0, width:55 },
                 focusedPinCodeContainerStyle:{
                     borderBottomColor: "#73D08D"
                 },
