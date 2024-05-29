@@ -102,7 +102,7 @@ const SignIn = () => {
                   setPrintBadFormat(true)
                 }
                 else{
-
+                  router.push('./otp-code')
                 }
                 
               }
@@ -112,10 +112,10 @@ const SignIn = () => {
                   setPrintBadFormat(true)
                 }
                 else{
-
+                  router.push('./otp-code')
                 }
               }
-              router.push('./otp-code')
+              
             }} />
             <StyledText className='text-red-600 text-sm pt-6'>{printBadFormat ? badFormatString : null} </StyledText>
           </StyledView>
