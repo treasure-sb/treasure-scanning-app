@@ -84,7 +84,7 @@ const SignIn = () => {
                 }
                 else{
                   handleInfoSubmit(form.email, useEmail)
-                  router.replace({pathname:'./otp-code', params: {input:form.email, type: "email"} })
+                  router.push({pathname:'./otp-code', params: {info:form.email, type: "email"} })
                 }
                 
               }

@@ -62,7 +62,7 @@ const otpCode = () => {
         </StyledView>
         <StyledView className='items-start px-[72px] mb-4 w-auto'>
             <StyledText className='text-base justify-start' style={{color:"#535252", lineHeight:20}}>Enter the code we sent to</StyledText>
-            <StyledText className='justify-start text-lg' style={{color:"white", lineHeight:20}}>{type === "phone" ? formatPhoneNumber(info) : info ? info[0] : null}</StyledText>
+            <StyledText className='justify-start text-lg' style={{color:"white", lineHeight:20}}>{type === "phone" ? formatPhoneNumber(info) : info}</StyledText>
           </StyledView>
         <OtpInput numberOfDigits={6} onTextChange={(text) => setCode(text)} 
             blurOnFilled={true}
