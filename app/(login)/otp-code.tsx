@@ -26,12 +26,10 @@ const formatPhoneNumber = (phoneNumber: any) => {
 
 const asyncisVerified = async (info: any, code:string, type:any) => {
     const  verificationResult = await verifyMessageData(info, code, type)
-    console.log(type)
-    console.log(verificationResult)
     
     setTimeout(()=>{
         {verificationResult.user ? 
-            router.push('../(events)/my-events') : Toast.show({
+            router.push({pathname: '../(events)/my-events',params:{ID:verificationResult.user.id} }) : Toast.show({
             type: 'error',
             text1: "OTP Error",
             text2: 'Your OTP verification failed, likely due to a wrong code',
@@ -45,7 +43,6 @@ const asyncisVerified = async (info: any, code:string, type:any) => {
 const otpCode = () => {
     const [code, setCode] = useState('')
     const {info, type} = useLocalSearchParams()
-    {console.log({info})}
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <StyledSafeAreaView 
