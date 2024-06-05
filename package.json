@@ -20,6 +20,7 @@
     "@react-navigation/native": "^6.0.2",
     "@rneui/themed": "^4.0.0-rc.8",
     "@supabase/supabase-js": "^2.43.4",
+    "date-fns": "^3.6.0",
     "expo": "~51.0.8",
     "expo-auth-session": "~5.5.2",
     "expo-camera": "~15.0.9",
@@ -45,7 +46,8 @@
     "react-native-svg": "15.2.0",
     "react-native-toast-message": "^2.2.0",
     "react-native-url-polyfill": "^2.0.0",
-    "react-native-web": "~0.19.10"
+    "react-native-web": "~0.19.10",
+    "expo-modules-core": "~1.12.12"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -29,7 +29,7 @@ const asyncisVerified = async (info: any, code:string, type:any) => {
     
     setTimeout(()=>{
         {verificationResult.user ? 
-            router.push({pathname: '../(events)/my-events',params:{ID:verificationResult.user.id} }) : Toast.show({
+            router.push({pathname: '../(events)/my-events',params:{userID:verificationResult.user.id} }) : Toast.show({
             type: 'error',
             text1: "OTP Error",
             text2: 'Your OTP verification failed, likely due to a wrong code',
@@ -51,7 +51,7 @@ const otpCode = () => {
           backgroundColor: "#0D0F0E"
         }}
       >
-        <Header />
+        <Header backButton={true} buttonTitle='Go Back' />
         <StyledView className="w-full items-center px-4 mt-6 mb-2">
           <StyledText className="text-white text-2xl font-bold mb-6">
             Enter Code

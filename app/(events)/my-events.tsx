@@ -1,11 +1,11 @@
 import Header from "@/components/header";
-import { View, Text, TouchableWithoutFeedback, Keyboard, FlatList, Image, ScrollView } from 'react-native'
+import { View, Text, FlatList, Image, TouchableHighlight } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { styled } from "nativewind";
 import { supabase, userID } from "@/lib/supabase";
 import { createClient } from "@supabase/supabase-js";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, useRouter } from "expo-router";
 
 const StyledView = styled(View);
 const StyledSafeAreaView = styled(SafeAreaView);
@@ -16,6 +16,7 @@ type Event = {
   name: string;
   poster_url: string;
   date: string;
+  id: string
 };
 type EventsState = {
   data: Event[] | null;
@@ -23,14 +24,15 @@ type EventsState = {
 };
 const myEvents = () => {
   const [eventsState, setEventsState] = useState<EventsState>({ data: null, error: null });
-  const {ID} = useLocalSearchParams()
+  const {userID} = useLocalSearchParams()
+  const router = useRouter();
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const { data, error } = await supabase
           .from('events')
-          .select('name, poster_url, date')
-          .eq('organizer_id', ID);
+          .select('name, poster_url, date, id')
+          .eq('organizer_id', userID);
 
         if (error) {
           setEventsState({ data: null, error: error.message });
@@ -77,15 +79,18 @@ const myEvents = () => {
 
               }}
               >
+                
+                <TouchableHighlight onPress={()=>{router.push({pathname:"event-pg", params:{eventId: item.id, userId: userID, eventName:item.name, eventDate:item.date} })}}>
                 <Image source={{uri:"https://qkdlfshzugzeqlznyqfv.supabase.co/storage/v1/object/public/posters/" + item.poster_url}} style={{
                   width:180,
                   height:180,
                   resizeMode:"center",
                   borderRadius:40,
                   overflow:"hidden"
-                }}/>
+                }}
+                />
+                </TouchableHighlight>
                 <Text style={{color:"white", paddingBottom:20}} numberOfLines={2}>{item.name}</Text>
-                <>{console.log("https://qkdlfshzugzeqlznyqfv.supabase.co/storage/v1/object/public/posters/" + item.poster_url)}</>
               </StyledView>
               
             }
