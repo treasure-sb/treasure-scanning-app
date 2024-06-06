@@ -1,9 +1,9 @@
-import { View, Text, SafeAreaView, Image} from 'react-native'
+import { View, Text, SafeAreaView, Image, TouchableWithoutFeedback} from 'react-native'
 import React from 'react'
 import { styled } from 'nativewind';
-import Header from "@/components/header";
 import {format } from 'date-fns'
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+import Header from "@/components/header";
 
 const StyledView = styled(View);
 const StyledSafeAreaView = styled(SafeAreaView);
@@ -33,11 +33,16 @@ const eventPg = () => {
                 <Image source={require("../../assets/images/scan-icon.png")} style={{width:120, height: 120}}/>
                 <StyledText className='font-bold mt-6 text-lg text-white'>Scan Tickets</StyledText>
             </StyledView>
-
+            <TouchableWithoutFeedback onPress={async ()=>{
+                router.push({pathname:"./(event-specific)/attendees", params:{eventID: eventId}})
+                }   
+            }>
             <StyledView className="w-[50%] items-center px-4 mt-8 mb-0">
                 <Image source={require("../../assets/images/attendees.png")} style={{width:120, height: 120}}/>
                 <StyledText className='font-bold mt-6 text-lg text-white'>Attendees</StyledText>
             </StyledView>
+            </TouchableWithoutFeedback>
+            
             
         </StyledView>
         

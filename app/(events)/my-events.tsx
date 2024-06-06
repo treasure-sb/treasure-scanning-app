@@ -6,6 +6,7 @@ import { styled } from "nativewind";
 import { supabase, userID } from "@/lib/supabase";
 import { createClient } from "@supabase/supabase-js";
 import { router, useLocalSearchParams, useRouter } from "expo-router";
+import { format } from "date-fns";
 
 const StyledView = styled(View);
 const StyledSafeAreaView = styled(SafeAreaView);
@@ -32,11 +33,12 @@ const myEvents = () => {
         const { data, error } = await supabase
           .from('events')
           .select('name, poster_url, date, id')
-          .eq('organizer_id', userID);
+          .eq('organizer_id', userID as NonNullable<string | string[] | undefined>);
 
         if (error) {
           setEventsState({ data: null, error: error.message });
         } else {
+          const sortedData = data.sort((a, b) => (b.date as string).localeCompare(a.date as string));
           setEventsState({ data, error: null });
         }
       } catch (err: any) {
@@ -90,7 +92,7 @@ const myEvents = () => {
                 }}
                 />
                 </TouchableHighlight>
-                <Text style={{color:"white", paddingBottom:20}} numberOfLines={2}>{item.name}</Text>
+                <Text style={{color:"white", paddingBottom:20}} numberOfLines={2}>{item.name} {format(item.date, "MMMM do")}</Text>
               </StyledView>
               
             }
