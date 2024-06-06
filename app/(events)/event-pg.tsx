@@ -34,7 +34,7 @@ const eventPg = () => {
                 <StyledText className='font-bold mt-6 text-lg text-white'>Scan Tickets</StyledText>
             </StyledView>
             <TouchableWithoutFeedback onPress={async ()=>{
-                router.push({pathname:"./(event-specific)/attendees", params:{eventID: eventId}})
+                router.push({pathname:"./(event-specific)/attendee-pg", params:{eventID: eventId}})
                 }   
             }>
             <StyledView className="w-[50%] items-center px-4 mt-8 mb-0">
