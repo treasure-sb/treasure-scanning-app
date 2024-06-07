@@ -26,13 +26,14 @@ const CustomButton: React.FC<Props> = ({
             <StyledTouchableOpacity 
                 onPress={handlePress}
                 activeOpacity={0.7}
-                className = {`bg-white rounded-xl h-[62px] justify-center items-center ${containerStyles} ${isLoading ? 'opacity-50':''}`}
                 disabled={isLoading}
                 style = {{
                     borderRadius: 25,
                     backgroundColor: "#73D08D",
                     width: "35%",
                     height: 50,
+                    alignItems:"center",
+                    justifyContent:"center"
                 }}
                 >
                 <StyledText style={{

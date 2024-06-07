@@ -19,11 +19,7 @@ export default function App() {
         }}>
             <StyledView className="w-full h-full pt-64 items-center" >
                 <StyledImage className="align-bottom w-full h-[100px] "  resizeMode = 'contain' source={require('../assets/images/web_logo.png')} />
-                <StyledText className = "text-white text pt-1 text-base font-semibold">For Hosts</StyledText>
-                <Link href="/scanner" style = {{color: 'green'}} className="mb-32"> Go to Scanner </Link>
-                {//TODO remove later
-                }
-                <StyledText style = {{color: 'green'}} className="mb-32" onPress={()=>{router.push({pathname:"event-pg", params:{eventId: "123", userId: "123", eventName:"Meow", eventDate:"2023-12-03"} })}}> Go to Event pg </StyledText>
+                <StyledText className = "text-white text pt-1 text-base font-semibold mb-32">For Hosts</StyledText>
                 <CustomButton title = "Log In" handlePress={() => router.push('./sign-in')} />
                 
             </StyledView>

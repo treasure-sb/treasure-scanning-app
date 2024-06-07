@@ -44,6 +44,8 @@ export type Ticket = {
   userName: string;
   ticketType: string;
   ticketId: string,
+  email: string | null | undefined,
+  phone: string | null | undefined,
   isValid: boolean
 };
 
