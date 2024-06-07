@@ -68,7 +68,7 @@ const attendees = () => {
       }
     }, [searchQuery, ticketsState.data]);
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    
       <StyledSafeAreaView 
       className="flex-1"
       style={{
@@ -76,12 +76,15 @@ const attendees = () => {
         flex:1
       }}
       >
+        
         <Header backButton={true}/>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <StyledView className=" justify-center w-full items-center px-4 mt-4">
         <StyledText className="text-[#73D08D] text-2xl font-bold mb-0 text-center w-[75%]">
             Attendees
         </StyledText>
         </StyledView>
+        </TouchableWithoutFeedback>
         <StyledView className="flex-row justify-center w-full px-2 mt-4 mb-4 items-center self-center" style={{
           borderRadius: 30,
           width: "98%",
@@ -115,6 +118,7 @@ const attendees = () => {
           scrollToOverflowEnabled = {true}
           style = {{flexGrow:1}}
           extraData={[refresh, filteredData]}
+          onScrollBeginDrag={Keyboard.dismiss}
           renderItem = {( {item }) =>
             <StyledView className='pt-2 pb-[1px] justify-center pl-[3px]' style={{height:75}}>
               <StyledView className = "flex-row w-[99%] h-full bg-[#2A2424] items-center pl-1" style={{borderRadius:30}}>
@@ -160,7 +164,7 @@ const attendees = () => {
           keyExtractor = {(item) => item.ticketId}
            />
       </StyledSafeAreaView>
-    </TouchableWithoutFeedback>
+    
     
     
   )

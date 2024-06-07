@@ -29,10 +29,15 @@ const eventPg = () => {
         </StyledText>
         </StyledView>
         <StyledView className='f flex-row'>
+        <TouchableWithoutFeedback onPress={async ()=>{
+                router.push({pathname:"../../scanner", params:{userID: userId}})
+                }   
+            }>
             <StyledView className="w-[50%] items-center px-4 mt-8 mb-0">
                 <Image source={require("../../assets/images/scan-icon.png")} style={{width:120, height: 120}}/>
                 <StyledText className='font-bold mt-6 text-lg text-white'>Scan Tickets</StyledText>
             </StyledView>
+          </TouchableWithoutFeedback>
             <TouchableWithoutFeedback onPress={async ()=>{
                 router.push({pathname:"./(event-specific)/attendee-pg", params:{eventID: eventId}})
                 }   

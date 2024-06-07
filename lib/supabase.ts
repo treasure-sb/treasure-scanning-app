@@ -42,10 +42,11 @@ export const verifyMessageData = async(info: any, code:string, type : any) => {
 
 export type Ticket = {
   userName: string;
-  ticketType: string;
+  ticketType?: string;
   ticketId: string,
-  email: string | null | undefined,
-  phone: string | null | undefined,
+  email?: string | null | undefined,
+  phone?: string | null | undefined,
+  organizerId? : string,
   isValid: boolean
 };
 
