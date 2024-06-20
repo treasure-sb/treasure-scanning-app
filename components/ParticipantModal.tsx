@@ -5,14 +5,19 @@ type Props = {
   visible: boolean;
   onClose: () => void;
   onCheckIn: () => void;
-  participantType: string, //vendor or attendee
+  participantType: string; //vendor or attendee
   name: string;
   tables: Number;
   section: string;
   contact: string;
+  checkedIn: boolean
 };
 
-const ParticipantModal: React.FC<Props> = ({ visible, onClose, onCheckIn, name, tables, section, contact, participantType }) => {
+const ParticipantModal: React.FC<Props> = ({ visible, onClose, onCheckIn, name, tables, section, contact, participantType, checkedIn }) => {
+  const onClickFunc = () => {
+    onCheckIn()
+    checkedIn = !checkedIn
+  }
   return (
     <Modal
       animationType="slide"
@@ -50,12 +55,31 @@ const ParticipantModal: React.FC<Props> = ({ visible, onClose, onCheckIn, name, 
               <Text style={styles.infoText} selectable={true}>{contact}</Text>
             </View>
           </View>
-          <TouchableOpacity style={styles.checkInButton} onPress={onCheckIn}>
-            <Text style={styles.checkInButtonText}>Check In</Text>
+          <TouchableOpacity style={{
+            backgroundColor: !checkedIn ? "#73D08D" : "#535252",
+            borderRadius: 30,
+            width: 150,
+            height: 55,
+            marginTop: 20,
+            marginBottom:15,
+            alignContent:"center",
+            justifyContent:"center"
+            }} 
+            onPress={onClickFunc}
+          >
+            <Text style={{
+                color: !checkedIn ? "black": "white",
+                fontWeight: 'bold',
+                fontSize: 18,
+                textAlign:"center"
+            }}>
+              {checkedIn ? "Checked In" : "Check In"}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
     </Modal>
+    
   );
 };
 
@@ -88,11 +112,11 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   nameText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: '700',
     color: '#ffffff',
     marginBottom: 30,
-    marginRight:20
+    marginRight:8
   },
   textRowView: {
     width:"100%", 
@@ -106,16 +130,16 @@ const styles = StyleSheet.create({
   leftText: {
     color:"white", 
     fontSize: 17,
-    fontWeight:"bold"
+    fontWeight:"600"
   },
   rightTextView: {
     width:"75%",
-    paddingLeft:30
+    paddingLeft:30,
   },
   infoText: {
     fontSize: 17,
     color: 'white',
-    fontWeight:"500",
+    fontWeight:"300",
     marginBottom: 20,
     textAlign: 'center'
   },
@@ -126,11 +150,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     marginTop: 20,
     marginBottom:15
-  },
-  checkInButtonText: {
-    color: '#000000',
-    fontWeight: 'bold',
-    fontSize: 18,
   },
 });
 

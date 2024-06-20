@@ -167,14 +167,21 @@ const vendors = () => {
                 <ParticipantModal
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
-                onCheckIn={() => {
-                    setModalVisible(false);
-                    // Perform check-in logic here if needed
+                onCheckIn={async() => {
+                    if (selectedVendor.checkedIn) {
+                        await supabase.from('event_vendors').update({ checked_in: false }).eq('vendor_id', selectedVendor.vendorId);
+                        selectedVendor.checkedIn = false;
+                      } else {
+                        await supabase.from('event_vendors').update({ checked_in: true }).eq('vendor_id', selectedVendor.vendorId);
+                        selectedVendor.checkedIn = true;
+                      }
+                      setRefresh((prev) => prev + 1);
                 }}
                 name={selectedVendor.userName}
                 tables={selectedVendor.tableQuantity}
                 section={selectedVendor.tableSection}
                 contact={selectedVendor.phone ? formatPhoneNumber(selectedVendor.phone as string) : selectedVendor.email as string}
+                checkedIn = {selectedVendor.checkedIn}
                 participantType='vendor'
                 />
             )}
