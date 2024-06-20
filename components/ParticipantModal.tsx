@@ -26,9 +26,30 @@ const ParticipantModal: React.FC<Props> = ({ visible, onClose, onCheckIn, name, 
             <Text style={styles.closeButtonText}>✕</Text>
           </TouchableOpacity>
           <Text style={styles.nameText}>{name}</Text>
-          <Text style={styles.infoText}>Tables: {tables as any as string}</Text>
-          <Text style={styles.infoText}>Section: {section}</Text>
-          <Text style={styles.infoText}>Contact: {contact}</Text>
+          <View style={styles.textRowView}>
+            <View style={styles.leftTextView}>
+              <Text style={styles.leftText}>Tables: </Text>
+            </View>
+            <View style={styles.rightTextView}>
+              <Text style={styles.infoText}>{tables as any as string}</Text>
+            </View>
+          </View>
+          <View style={styles.textRowView}>
+            <View style={styles.leftTextView}>
+              <Text style={styles.leftText}>Section: </Text>
+            </View>
+            <View style={styles.rightTextView}>
+              <Text style={styles.infoText}>{section}</Text>
+            </View>
+          </View>
+          <View style={styles.textRowView}>
+            <View style={styles.leftTextView}>
+              <Text style={styles.leftText}>Contact: </Text>
+            </View>
+            <View style={styles.rightTextView}>
+              <Text style={styles.infoText} selectable={true}>{contact}</Text>
+            </View>
+          </View>
           <TouchableOpacity style={styles.checkInButton} onPress={onCheckIn}>
             <Text style={styles.checkInButtonText}>Check In</Text>
           </TouchableOpacity>
@@ -47,8 +68,10 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: '75%',
-    backgroundColor: '#1D1D1D',
+    backgroundColor: '#0D0F0E',
     borderRadius: 70,
+    borderWidth:1,
+    borderColor:"#3F4743",
     padding: 20,
     alignItems: 'center',
     position: 'relative',
@@ -65,15 +88,36 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   nameText: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#ffffff',
-    marginBottom: 10,
+    marginBottom: 30,
+    marginRight:20
+  },
+  textRowView: {
+    width:"100%", 
+    flexDirection:"row", 
+    alignContent:"flex-start"
+  },
+  leftTextView: {
+    width:"26%", 
+    marginLeft:15
+  },
+  leftText: {
+    color:"white", 
+    fontSize: 17,
+    fontWeight:"bold"
+  },
+  rightTextView: {
+    width:"75%",
+    paddingLeft:30
   },
   infoText: {
-    fontSize: 18,
-    color: '#cccccc',
-    marginBottom: 10,
+    fontSize: 17,
+    color: 'white',
+    fontWeight:"500",
+    marginBottom: 20,
+    textAlign: 'center'
   },
   checkInButton: {
     backgroundColor: '#73D08D',

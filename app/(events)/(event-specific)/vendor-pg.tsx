@@ -6,6 +6,7 @@ import Header from '@/components/header'
 import { Vendor, supabase } from '@/lib/supabase'
 import { useLocalSearchParams } from 'expo-router'
 import ParticipantModal from '@/components/ParticipantModal'
+import { formatPhoneNumber } from '@/components/formattedPhoneNumber'
 
 
 const StyledView = styled(View);
@@ -173,7 +174,7 @@ const vendors = () => {
                 name={selectedVendor.userName}
                 tables={selectedVendor.tableQuantity}
                 section={selectedVendor.tableSection}
-                contact={selectedVendor.phone ? selectedVendor.phone as string : selectedVendor.email as string}
+                contact={selectedVendor.phone ? formatPhoneNumber(selectedVendor.phone as string) : selectedVendor.email as string}
                 participantType='vendor'
                 />
             )}
