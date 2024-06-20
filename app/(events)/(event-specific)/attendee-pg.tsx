@@ -1,11 +1,11 @@
 import { View, Text, SafeAreaView, FlatList, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import Icon from 'react-native-vector-icons/EvilIcons'
 import React, { useEffect, useState } from 'react'
-import { styled } from 'nativewind';
-import Header from '@/components/header';
-import { Ticket, supabase } from '@/lib/supabase';
-import { useLocalSearchParams } from 'expo-router';
-import { Database } from '../../../types/supabase'
+import { styled } from 'nativewind'
+import Header from '@/components/header'
+import { Ticket, supabase } from '@/lib/supabase'
+import { useLocalSearchParams } from 'expo-router'
+
 
 const StyledView = styled(View);
 const StyledSafeAreaView = styled(SafeAreaView);
@@ -16,7 +16,7 @@ const StyledTextInput = styled(TextInput)
 type ticketsState = {
     data: Ticket[] | null;
     error: string | null;
-  };
+  }
   
 
 

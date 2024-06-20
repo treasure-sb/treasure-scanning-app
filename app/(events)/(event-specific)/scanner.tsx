@@ -129,7 +129,7 @@ const Scanner = () => {
                   }}
                 >
                     
-                  <Image source={require('../assets/images/back-btn.png')}/>
+                  <Image source={require('../../../assets/images/back-btn.png')}/>
                       
                         
                 </StyledView>
@@ -142,7 +142,7 @@ const Scanner = () => {
             >
               <Image
                 resizeMode='contain'
-                source={require('../assets/images/emerald.png')}
+                source={require('../../../assets/images/emerald.png')}
                 style={{
                   width: 30, 
                   height: 30, 

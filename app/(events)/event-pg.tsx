@@ -28,29 +28,37 @@ const eventPg = () => {
             {eventName + " " + formattedDate}
         </StyledText>
         </StyledView>
-        <StyledView className='f flex-row'>
-        <TouchableWithoutFeedback onPress={async ()=>{
-                router.push({pathname:"../../scanner", params:{userID: userId}})
-                }   
-            }>
-            <StyledView className="w-[50%] items-center px-4 mt-8 mb-0">
-                <Image source={require("../../assets/images/scan-icon.png")} style={{width:120, height: 120}}/>
-                <StyledText className='font-bold mt-6 text-lg text-white'>Scan Tickets</StyledText>
-            </StyledView>
-          </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={async ()=>{
-                router.push({pathname:"./(event-specific)/attendee-pg", params:{eventID: eventId}})
-                }   
-            }>
-            <StyledView className="w-[50%] items-center px-4 mt-8 mb-0">
-                <Image source={require("../../assets/images/attendees.png")} style={{width:120, height: 120}}/>
-                <StyledText className='font-bold mt-6 text-lg text-white'>Attendees</StyledText>
-            </StyledView>
+        <StyledView className='f flex-row h-48'>
+          <TouchableWithoutFeedback onPress={async ()=>{
+                  router.push({pathname:"../../scanner", params:{userID: userId}})
+                  }   
+              }>
+              <StyledView className="w-[50%] items-center px-4 mt-8 mb-0">
+                  <Image source={require("../../assets/images/scan-icon.png")} style={{width:120, height: 120}}/>
+                  <StyledText className='font-bold mt-6 text-lg text-white'>Scan Tickets</StyledText>
+              </StyledView>
             </TouchableWithoutFeedback>
-            
-            
+            <TouchableWithoutFeedback onPress={async ()=>{
+                  router.push({pathname:"./(event-specific)/attendee-pg", params:{eventID: eventId}})
+                  }   
+              }>
+              <StyledView className="w-[50%] items-center px-4 mt-8 mb-0">
+                  <Image source={require("../../assets/images/attendees.png")} style={{width:120, height: 120}}/>
+                  <StyledText className='font-bold mt-6 text-lg text-white'>Attendees</StyledText>
+              </StyledView>
+            </TouchableWithoutFeedback>
         </StyledView>
-        
+        <StyledView className='flex-row h-60'>
+          <TouchableWithoutFeedback onPress={async ()=>{
+              router.push({pathname:"./(event-specific)/vendor-pg", params:{eventID: eventId}})
+            }   
+          }>
+              <StyledView className="w-[50%] items-center px-4 mt-8 mb-0">
+                  <Image source={require("../../assets/images/vendor.png")} style={{width:120, height: 120}}/>
+                  <StyledText className='font-bold mt-6 text-lg text-white'>Vendors</StyledText>
+              </StyledView>
+          </TouchableWithoutFeedback>
+        </StyledView>
       </StyledSafeAreaView>
 )}
 

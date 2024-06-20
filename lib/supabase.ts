@@ -49,6 +49,17 @@ export type Ticket = {
   organizerId? : string,
   isValid: boolean
 };
+export type Vendor = {
+  userName: string;
+  tableId: string;
+  tableQuantity: Number,
+  tableSection: string,
+  vendorId: string,
+  email?: string | null | undefined,
+  phone?: string | null | undefined,
+  organizerId? : string,
+  checkedIn: boolean
+};
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
