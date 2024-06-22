@@ -34,7 +34,7 @@ const vendors = () => {
         try {
           const { data, error } = await supabase
                     .from('event_vendors')
-                    .select('profiles(first_name, last_name, email, phone), tables(quantity, section_name), vendor_id, checked_in')
+                    .select('profiles(first_name, last_name), tables(section_name), vendor_id, checked_in, application_phone, application_email, table_quantity, vendors_at_table')
                     .eq('event_id', eventID as NonNullable<string | string[] | undefined>)
           console.log({data, error})
   
@@ -44,12 +44,13 @@ const vendors = () => {
             const vendors: Vendor[] = data.map((item) => ({
               userName: `${item.profiles?.first_name} ${item.profiles?.last_name}`,
               tableId: item.vendor_id,
-              tableQuantity: item.tables?.quantity ? item.tables?.quantity : 0,
+              tableQuantity: item.table_quantity,
               tableSection: item.tables?.section_name as string,
               vendorId: item.vendor_id as string,
-              email: item.profiles?.email,
-              phone: item.profiles?.phone,
-              checkedIn: item.checked_in
+              email: item.application_email,
+              phone: item.application_phone,
+              checkedIn: item.checked_in,
+              vendorsAtTable: item.vendors_at_table
           }));
             setvendorsState({ data:vendors, error: null });
             setFilteredData(vendors); // Set the initial filtered data
@@ -180,7 +181,7 @@ const vendors = () => {
                 name={selectedVendor.userName}
                 tables={selectedVendor.tableQuantity}
                 section={selectedVendor.tableSection}
-                contact={selectedVendor.phone ? formatPhoneNumber(selectedVendor.phone as string) : selectedVendor.email as string}
+                contact={selectedVendor.phone ? formatPhoneNumber(selectedVendor.phone.substring(2) as string) : selectedVendor.email as string}
                 checkedIn = {selectedVendor.checkedIn}
                 participantType='vendor'
                 />

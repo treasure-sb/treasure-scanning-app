@@ -58,7 +58,8 @@ export type Vendor = {
   email?: string | null | undefined,
   phone?: string | null | undefined,
   organizerId? : string,
-  checkedIn: boolean
+  checkedIn: boolean,
+  vendorsAtTable: Number
 };
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
