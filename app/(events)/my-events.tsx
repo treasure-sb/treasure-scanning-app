@@ -30,15 +30,30 @@ const myEvents = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const { data, error } = await supabase
+        const {data : role, error : adminError} = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', userID as NonNullable<string | string[] | undefined>).single();
+        let tempData;
+        if (role?.role === "admin"){
+          const { data, error } = await supabase
           .from('events')
-          .select('name, poster_url, date, id')
-          .eq('organizer_id', userID as NonNullable<string | string[] | undefined>);
+          .select('name, poster_url, date, id');
+          tempData = {data, error}
+        }
+        else{
+        const { data, error } = await supabase
+        .from('events')
+        .select('name, poster_url, date, id')
+        .eq('organizer_id', userID as NonNullable<string | string[] | undefined>);
+        tempData = {data, error}
+      }
+      const { data, error } = tempData
 
         if (error) {
           setEventsState({ data: null, error: error.message });
         } else {
-          const sortedData = data.sort((a, b) => (b.date as string).localeCompare(a.date as string));
+          const sortedData = data?.sort((a, b) => (b.date as string).localeCompare(a.date as string));
           setEventsState({ data, error: null });
         }
       } catch (err: any) {

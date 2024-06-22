@@ -82,14 +82,14 @@ const Scanner = () => {
                 organizerId: item.events?.organizer_id
             }));
               const ticket = tickets[0]
-              if(userID === ticket.organizerId){
+              //if(userID === ticket.organizerId){
                 setTicket(ticket)
                 setModalVisible(true)
-            }
-            else{
+            //}
+            /*else{
               setTicket(null)
               setModalVisible(true)
-            }
+            }*/
         }}
         catch(err: any){}
       }
