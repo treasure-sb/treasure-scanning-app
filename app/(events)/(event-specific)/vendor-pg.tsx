@@ -7,6 +7,7 @@ import { Vendor, supabase } from '@/lib/supabase'
 import { useLocalSearchParams } from 'expo-router'
 import ParticipantModal from '@/components/ParticipantModal'
 import { formatPhoneNumber } from '@/components/formattedPhoneNumber'
+import Toast from 'react-native-toast-message'
 
 
 const StyledView = styled(View);
@@ -128,6 +129,14 @@ const vendors = () => {
                       onPress={async () => {
                         if (item.checkedIn) {
                           await supabase.from('event_vendors').update({ checked_in: false }).eq('vendor_id', item.vendorId);
+                          Toast.show({
+                            type: 'success',
+                            text1: "Vendor Was Checkout Out",
+                            text2: item.userName + " is checked out",
+                            position:'bottom',
+                            visibilityTime:2000
+                            
+                          })
                           item.checkedIn = false;
                         } else {
                           await supabase.from('event_vendors').update({ checked_in: true }).eq('vendor_id', item.vendorId);
@@ -171,6 +180,14 @@ const vendors = () => {
                 onCheckIn={async() => {
                     if (selectedVendor.checkedIn) {
                         await supabase.from('event_vendors').update({ checked_in: false }).eq('vendor_id', selectedVendor.vendorId);
+                        Toast.show({
+                          type: 'success',
+                          text1: "Vendor Was Checkout Out",
+                          text2: selectedVendor.userName + " is checked out",
+                          position:'bottom',
+                          visibilityTime:2000
+                          
+                        })
                         selectedVendor.checkedIn = false;
                       } else {
                         await supabase.from('event_vendors').update({ checked_in: true }).eq('vendor_id', selectedVendor.vendorId);

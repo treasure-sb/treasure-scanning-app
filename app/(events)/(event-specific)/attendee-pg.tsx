@@ -5,6 +5,7 @@ import { styled } from 'nativewind'
 import Header from '@/components/header'
 import { Ticket, supabase } from '@/lib/supabase'
 import { useLocalSearchParams } from 'expo-router'
+import Toast from 'react-native-toast-message'
 
 
 const StyledView = styled(View);
@@ -131,6 +132,14 @@ const attendees = () => {
                         item.isValid = false;
                       } else {
                         await supabase.from('event_tickets').update({ valid: true }).eq('id', item.ticketId);
+                        Toast.show({
+                          type: 'success',
+                          text1: "Attendee Was Checkout Out",
+                          text2: item.userName + " is checked out",
+                          position:'bottom',
+                          visibilityTime:2000
+                          
+                        })
                         item.isValid = true;
                       }
                       setRefresh((prev) => prev + 1);
