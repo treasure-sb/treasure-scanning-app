@@ -108,9 +108,9 @@ const attendees = () => {
           />
       </StyledView>
         <StyledView className='flex-row width-full mt-4'>
-          <StyledText className='font-bold w-[33%] text-white text-sm pl-4'>Name</StyledText>
+          <StyledText className='font-bold w-[33%] text-white text-sm pl-6'>Name</StyledText>
           <StyledText className='font-bold w-[33%] text-center text-white text-sm'>Ticket Type</StyledText>
-          <StyledText className='font-bold w-[33%] text-right text-white text-sm pr-4'>Check In</StyledText>
+          <StyledText className='font-bold w-[33%] text-right text-white text-sm pr-8'>Check In</StyledText>
         </StyledView>
         
           <FlatList
@@ -122,7 +122,7 @@ const attendees = () => {
           renderItem = {( {item }) =>
             <StyledView className='pt-2 pb-[1px] justify-center pl-[3px]' style={{height:75}}>
               <StyledView className = "flex-row w-[99%] h-full bg-[#2A2424] items-center pl-1" style={{borderRadius:30}}>
-                <StyledText className='w-[33%] text-white text-left text-ellipsis align-middle text-md pl-[2px]' >{item.userName}</StyledText>
+                <StyledText className='w-[33%] text-white text-left text-ellipsis align-middle text-md pl-4' >{item.userName}</StyledText>
                 <StyledText className='w-[33%] text-white text-center text-ellipsis align-middle text-md pl-[2px]' >{item.ticketType}</StyledText> 
                 <TouchableOpacity 
                     onPress={async () => {

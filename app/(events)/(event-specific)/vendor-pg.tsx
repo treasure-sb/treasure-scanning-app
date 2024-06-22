@@ -103,9 +103,9 @@ const vendors = () => {
             />
         </StyledView>
           <StyledView className='flex-row width-full mt-4'>
-            <StyledText className='font-bold w-[33%] text-white text-sm pl-4'>Name</StyledText>
+            <StyledText className='font-bold w-[33%] text-white text-sm pl-6'>Name</StyledText>
             <StyledText className='font-bold w-[33%] text-center text-white text-sm'>Tables</StyledText>
-            <StyledText className='font-bold w-[33%] text-right text-white text-sm pr-4'>Check In</StyledText>
+            <StyledText className='font-bold w-[33%] text-right text-white text-sm pr-8'>Check In</StyledText>
           </StyledView>
           
             <FlatList
