@@ -121,7 +121,7 @@ const vendors = () => {
                     setModalVisible(true)
                 }}>
                 <StyledView className = "flex-row w-[99%] h-full bg-[#2A2424] items-center pl-1" style={{borderRadius:30}}>
-                  <StyledText className='w-[33%] text-white text-left text-ellipsis align-middle text-md pl-[2px]' >{item.userName}</StyledText>
+                  <StyledText className='w-[33%] text-white text-left text-ellipsis align-middle text-md pl-4' >{item.userName}</StyledText>
                   <StyledText className='w-[33%] text-white text-center text-ellipsis align-middle text-md pl-[2px]' >{item.tableQuantity.toString()}</StyledText> 
                   <>{console.log(item)}</>
                   <TouchableOpacity 

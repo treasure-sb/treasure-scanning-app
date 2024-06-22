@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     alignContent:"flex-start"
   },
   leftTextView: {
-    width:"26%", 
+    width:"28%", 
     marginLeft:15
   },
   leftText: {
