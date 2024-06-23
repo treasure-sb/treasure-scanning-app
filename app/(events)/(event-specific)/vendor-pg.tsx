@@ -63,6 +63,18 @@ const vendors = () => {
       useEffect(() => {
           fetchVendors()
       }, [])
+      useEffect(() => {
+        if (searchQuery) {
+          const filtered = vendorsState.data?.filter((vendor) =>
+            vendor.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            vendor.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            vendor.phone?.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+          setFilteredData(filtered || []);
+        } else {
+          setFilteredData(vendorsState.data);
+        }
+      }, [searchQuery, vendorsState.data]);
       return (
     
         <StyledSafeAreaView 
