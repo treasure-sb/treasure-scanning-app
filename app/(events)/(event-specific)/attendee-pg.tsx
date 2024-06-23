@@ -6,6 +6,8 @@ import Header from '@/components/header'
 import { Ticket, supabase } from '@/lib/supabase'
 import { useLocalSearchParams } from 'expo-router'
 import Toast from 'react-native-toast-message'
+import ParticipantModal from '@/components/ParticipantModal'
+import { formatPhoneNumber } from '@/components/formattedPhoneNumber'
 
 
 const StyledView = styled(View);
@@ -27,6 +29,8 @@ const attendees = () => {
     const [ticketsState, setticketsState] = useState<ticketsState>({ data: null, error: null });
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredData, setFilteredData] = useState<Ticket[] | null>(null);
+    const [modalVisible, setModalVisible] = useState(false)
+    const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
     const fetchAttendees = async () => {
       try {
         const { data, error } = await supabase
@@ -122,6 +126,10 @@ const attendees = () => {
           onScrollBeginDrag={Keyboard.dismiss}
           renderItem = {( {item }) =>
             <StyledView className='pt-2 pb-[1px] justify-center pl-[3px]' style={{height:75}}>
+              <TouchableOpacity onPress={() => {
+                    setSelectedTicket(item)
+                    setModalVisible(true)
+                }}>
               <StyledView className = "flex-row w-[99%] h-full bg-[#2A2424] items-center pl-1" style={{borderRadius:30}}>
                 <StyledText className='w-[33%] text-white text-left text-ellipsis align-middle text-md pl-4' >{item.userName}</StyledText>
                 <StyledText className='w-[33%] text-white text-center text-ellipsis align-middle text-md pl-[2px]' >{item.ticketType}</StyledText> 
@@ -167,11 +175,40 @@ const attendees = () => {
                 
       
               </StyledView>
+              </TouchableOpacity>
             </StyledView>
             
           }
           keyExtractor = {(item) => item.ticketId}
            />
+           {selectedTicket && (
+                <ParticipantModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onCheckIn={async() => {
+                  if (selectedTicket.isValid) {
+                    await supabase.from('event_tickets').update({ valid: false }).eq('id', selectedTicket.ticketId);
+                    selectedTicket.isValid = false;
+                  } else {
+                    await supabase.from('event_tickets').update({ valid: true }).eq('id', selectedTicket.ticketId);
+                    Toast.show({
+                      type: 'success',
+                      text1: "Attendee Was Checkout Out",
+                      text2: selectedTicket.userName + " is checked out",
+                      position:'bottom',
+                      visibilityTime:2000
+                      
+                    })
+                    selectedTicket.isValid = true;
+                  }
+                  setRefresh((prev) => prev + 1);
+                }}
+                name={selectedTicket.userName}
+                contact={selectedTicket.phone ? formatPhoneNumber(selectedTicket.phone.substring(2) as string) : selectedTicket.email as string}
+                checkedIn = {!selectedTicket.isValid}
+                participantType='attendee'
+                />
+            )}
       </StyledSafeAreaView>
     
     

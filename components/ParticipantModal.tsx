@@ -7,8 +7,8 @@ type Props = {
   onCheckIn: () => void;
   participantType: string; //vendor or attendee
   name: string;
-  tables: Number;
-  section: string;
+  tables?: Number;
+  section?: string;
   contact: string;
   checkedIn: boolean
 };
@@ -31,22 +31,21 @@ const ParticipantModal: React.FC<Props> = ({ visible, onClose, onCheckIn, name, 
             <Text style={styles.closeButtonText}>✕</Text>
           </TouchableOpacity>
           <Text style={styles.nameText}>{name}</Text>
-          <View style={styles.textRowView}>
+          {participantType === "vendor" && (<><View style={styles.textRowView}>
             <View style={styles.leftTextView}>
               <Text style={styles.leftText}>Tables: </Text>
             </View>
             <View style={styles.rightTextView}>
               <Text style={styles.infoText}>{tables as any as string}</Text>
             </View>
-          </View>
-          <View style={styles.textRowView}>
-            <View style={styles.leftTextView}>
-              <Text style={styles.leftText}>Section: </Text>
-            </View>
-            <View style={styles.rightTextView}>
-              <Text style={styles.infoText}>{section}</Text>
-            </View>
-          </View>
+          </View><View style={styles.textRowView}>
+              <View style={styles.leftTextView}>
+                <Text style={styles.leftText}>Section: </Text>
+              </View>
+              <View style={styles.rightTextView}>
+                <Text style={styles.infoText}>{section}</Text>
+              </View>
+            </View></>)}
           <View style={styles.textRowView}>
             <View style={styles.leftTextView}>
               <Text style={styles.leftText}>Contact: </Text>
