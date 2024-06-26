@@ -26,6 +26,7 @@ type vendorsState = {
 const vendors = () => {
     const {eventID} = useLocalSearchParams()
     const [refresh, setRefresh] = useState(0)
+    const [isRefreshing, setIsRefreshing] = useState(false)
     const [vendorsState, setvendorsState] = useState<vendorsState>({ data: null, error: null })
     const [searchQuery, setSearchQuery] = useState('')
     const [filteredData, setFilteredData] = useState<Vendor[] | null>(null)
@@ -62,7 +63,7 @@ const vendors = () => {
       }
       useEffect(() => {
           fetchVendors()
-      }, [])
+      }, [refresh])
       useEffect(() => {
         if (searchQuery) {
           const filtered = vendorsState.data?.filter((vendor) =>
@@ -182,6 +183,12 @@ const vendors = () => {
                 </TouchableOpacity>
               </StyledView>
               
+            }
+            refreshing={isRefreshing}
+            onRefresh={()=>{setIsRefreshing(true)
+              fetchVendors()
+              setIsRefreshing(false)
+              }
             }
             keyExtractor = {(item) => item.vendorId}
              />

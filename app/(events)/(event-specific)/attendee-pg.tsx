@@ -31,6 +31,7 @@ const attendees = () => {
     const [filteredData, setFilteredData] = useState<Ticket[] | null>(null);
     const [modalVisible, setModalVisible] = useState(false)
     const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
+    const [isRefreshing, setIsRefreshing] = useState(false)
     const fetchAttendees = async () => {
       try {
         const { data, error } = await supabase
@@ -178,6 +179,11 @@ const attendees = () => {
               </TouchableOpacity>
             </StyledView>
             
+          }
+          refreshing={isRefreshing}
+          onRefresh={() => {setIsRefreshing(true)
+            fetchAttendees()
+            setIsRefreshing(false)}
           }
           keyExtractor = {(item) => item.ticketId}
            />
