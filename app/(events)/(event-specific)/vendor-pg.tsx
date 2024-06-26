@@ -92,7 +92,7 @@ const vendors = () => {
           
           <Header backButton={true}/>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <StyledView className=" justify-center w-full items-center px-4 mt-4">
+          <StyledView className=" justify-center w-full items-center px-4">
           <RefreshText time={updatedTime} />
           <StyledText className="text-[#73D08D] text-2xl font-bold mb-0 text-center w-[75%]">
               Vendors
