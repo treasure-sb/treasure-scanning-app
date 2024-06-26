@@ -34,6 +34,8 @@ const Header: React.FC<Props> = ({
                 style={{
                 flexDirection: 'row',
                 alignItems: 'center',
+                height: "100%",
+                width: "30%"
                 }}
             >
                 
