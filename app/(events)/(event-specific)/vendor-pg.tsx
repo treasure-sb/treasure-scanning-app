@@ -8,6 +8,7 @@ import { useLocalSearchParams } from 'expo-router'
 import ParticipantModal from '@/components/ParticipantModal'
 import { formatPhoneNumber } from '@/components/formattedPhoneNumber'
 import Toast from 'react-native-toast-message'
+import RefreshText, { TimeDisplay } from '@/components/Refresh-text'
 
 
 const StyledView = styled(View);
@@ -32,8 +33,11 @@ const vendors = () => {
     const [filteredData, setFilteredData] = useState<Vendor[] | null>(null)
     const [modalVisible, setModalVisible] = useState(false)
     const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
+    const [updatedTime, setUpdatedTime] = useState("")
+
     const fetchVendors = async () => {
         try {
+          setUpdatedTime(TimeDisplay)
           const { data, error } = await supabase
                     .from('event_vendors')
                     .select('profiles(first_name, last_name), tables(section_name), vendor_id, checked_in, application_phone, application_email, table_quantity, vendors_at_table')
@@ -89,6 +93,7 @@ const vendors = () => {
           <Header backButton={true}/>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <StyledView className=" justify-center w-full items-center px-4 mt-4">
+          <RefreshText time={updatedTime} />
           <StyledText className="text-[#73D08D] text-2xl font-bold mb-0 text-center w-[75%]">
               Vendors
           </StyledText>

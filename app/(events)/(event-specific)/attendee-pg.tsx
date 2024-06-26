@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, FlatList, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native'
+import { View, Text, SafeAreaView, FlatList, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard, Image } from 'react-native'
 import Icon from 'react-native-vector-icons/EvilIcons'
 import React, { useEffect, useState } from 'react'
 import { styled } from 'nativewind'
@@ -8,6 +8,8 @@ import { useLocalSearchParams } from 'expo-router'
 import Toast from 'react-native-toast-message'
 import ParticipantModal from '@/components/ParticipantModal'
 import { formatPhoneNumber } from '@/components/formattedPhoneNumber'
+import RefreshText, { TimeDisplay } from '@/components/Refresh-text'
+
 
 
 const StyledView = styled(View);
@@ -32,8 +34,10 @@ const attendees = () => {
     const [modalVisible, setModalVisible] = useState(false)
     const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
     const [isRefreshing, setIsRefreshing] = useState(false)
+    const [updatedTime, setUpdatedTime] = useState("")
     const fetchAttendees = async () => {
       try {
+        setUpdatedTime(TimeDisplay)
         const { data, error } = await supabase
                   .from('event_tickets')
                   .select('profiles(first_name, last_name, email, phone), tickets("name"), id, valid')
@@ -85,7 +89,9 @@ const attendees = () => {
         
         <Header backButton={true}/>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <StyledView className=" justify-center w-full items-center px-4 mt-4">
+        
+        <StyledView className=" justify-center w-full items-center px-4 mt-0">
+        <RefreshText time={updatedTime}/>
         <StyledText className="text-[#73D08D] text-2xl font-bold mb-0 text-center w-[75%]">
             Attendees
         </StyledText>
