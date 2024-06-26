@@ -28,34 +28,34 @@ const eventPg = () => {
             {eventName + " " + formattedDate}
         </StyledText>
         </StyledView>
-        <StyledView className='f flex-row h-48'>
+        <StyledView className='f flex-row h-52 mb-4'>
           <TouchableWithoutFeedback onPress={async ()=>{
                   router.push({pathname:"../../scanner", params:{userID: userId}})
                   }   
-              }>
-              <StyledView className="w-[50%] items-center px-4 mt-8 mb-0">
-                  <Image source={require("../../assets/images/scan-icon.png")} style={{width:120, height: 120}}/>
-                  <StyledText className='font-bold mt-6 text-lg text-white'>Scan Tickets</StyledText>
+              } style={{}}>
+              <StyledView className="w-[45%] h-[95%] items-center ml-4 mr-2 bg-[#2A2424] bg-opacity-60 justify-start" style={{borderRadius:12}}>
+                  <Image source={require("../../assets/images/scan-icon.png")} style={{width:55, height: 55, alignSelf:"center", marginTop:50}}/>
+                  <StyledText className='font-bold text-2xl text-white absolute bottom-10'>Scan Tickets</StyledText>
               </StyledView>
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback onPress={async ()=>{
                   router.push({pathname:"./(event-specific)/attendee-pg", params:{eventID: eventId}})
                   }   
               }>
-              <StyledView className="w-[50%] items-center px-4 mt-8 mb-0">
-                  <Image source={require("../../assets/images/attendees.png")} style={{width:120, height: 120}}/>
-                  <StyledText className='font-bold mt-6 text-lg text-white'>Attendees</StyledText>
+              <StyledView className="w-[45%] h-[95%] items-center mx-2 bg-[#2A2424] bg-opacity-60 justify-start" style={{borderRadius:12}}>
+                  <Image source={require("../../assets/images/attendees.png")} style={{width:60, height: 60, alignSelf:"center", marginTop:47}}/>
+                  <StyledText className='font-bold text-2xl text-white absolute bottom-10'>Attendees</StyledText>
               </StyledView>
             </TouchableWithoutFeedback>
         </StyledView>
-        <StyledView className='flex-row h-60'>
+        <StyledView className='flex-row h-52'>
           <TouchableWithoutFeedback onPress={async ()=>{
               router.push({pathname:"./(event-specific)/vendor-pg", params:{eventID: eventId}})
             }   
           }>
-              <StyledView className="w-[50%] items-center px-4 mt-8 mb-0">
-                  <Image source={require("../../assets/images/vendor.png")} style={{width:120, height: 120}}/>
-                  <StyledText className='font-bold mt-6 text-lg text-white'>Vendors</StyledText>
+              <StyledView className="w-[45%] h-[95%] items-center mx-4 bg-[#2A2424] bg-opacity-60 justify-start" style={{borderRadius:12}}>
+                  <Image source={require("../../assets/images/vendor.png")} style={{width:65, height: 65, alignSelf:"center", marginTop:45}}/>
+                  <StyledText className='font-bold text-2xl text-white absolute bottom-10'>Vendors</StyledText>
               </StyledView>
           </TouchableWithoutFeedback>
         </StyledView>
