@@ -35,6 +35,7 @@ const attendees = () => {
     const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
     const [isRefreshing, setIsRefreshing] = useState(false)
     const [updatedTime, setUpdatedTime] = useState("")
+    const [checkedInCount, setCheckedInCount] = useState(0)
     const fetchAttendees = async () => {
       try {
         setUpdatedTime(TimeDisplay)
@@ -57,6 +58,8 @@ const attendees = () => {
         }));
           setticketsState({ data:tickets, error: null });
           setFilteredData(tickets); // Set the initial filtered data
+          const notValidCount = tickets.filter(ticket => !ticket.isValid).length
+          setCheckedInCount(notValidCount)
         }
       } catch (err: any) {
         setticketsState({ data: null, error: err.message })
@@ -92,9 +95,19 @@ const attendees = () => {
         
         <StyledView className=" justify-center w-full items-center px-4 mt-0">
         <RefreshText time={updatedTime}/>
-        <StyledText className="text-[#73D08D] text-2xl font-bold mb-0 text-center w-[75%]">
-            Attendees
-        </StyledText>
+        <StyledView className='flex-row w-[100%] justify-center'>
+          
+          <StyledText className="text-[#73D08D] text-2xl font-bold mb-0 text-center ml-3 pl-32">
+              Attendees
+          </StyledText>
+          <StyledView className='j justify-end self-end flex-1'>
+            <StyledText className='t text-white text-xs text-right' >
+              Checked In{"\n"} <StyledText className='text-[#73D08D] font-bold text-right'>{checkedInCount}/</StyledText>{ticketsState.data ? ticketsState.data?.length : 0}
+            </StyledText>
+          </StyledView>
+          
+        </StyledView>
+        
         </StyledView>
         </TouchableWithoutFeedback>
         <StyledView className="flex-row justify-center w-full px-2 mt-4 mb-4 items-center self-center" style={{
@@ -145,6 +158,7 @@ const attendees = () => {
                       if (item.isValid) {
                         await supabase.from('event_tickets').update({ valid: false }).eq('id', item.ticketId);
                         item.isValid = false;
+                        setCheckedInCount((checkedInCount) => checkedInCount + 1)
                       } else {
                         await supabase.from('event_tickets').update({ valid: true }).eq('id', item.ticketId);
                         Toast.show({
@@ -156,6 +170,7 @@ const attendees = () => {
                           
                         })
                         item.isValid = true;
+                        setCheckedInCount((checkedInCount) => checkedInCount - 1)
                       }
                       setRefresh((prev) => prev + 1);
                     }}
@@ -201,6 +216,7 @@ const attendees = () => {
                   if (selectedTicket.isValid) {
                     await supabase.from('event_tickets').update({ valid: false }).eq('id', selectedTicket.ticketId);
                     selectedTicket.isValid = false;
+                    setCheckedInCount((checkedInCount) => checkedInCount + 1)
                   } else {
                     await supabase.from('event_tickets').update({ valid: true }).eq('id', selectedTicket.ticketId);
                     Toast.show({
@@ -212,6 +228,7 @@ const attendees = () => {
                       
                     })
                     selectedTicket.isValid = true;
+                    setCheckedInCount((checkedInCount) => checkedInCount - 1)
                   }
                   setRefresh((prev) => prev + 1);
                 }}

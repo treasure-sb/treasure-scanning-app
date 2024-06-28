@@ -34,6 +34,7 @@ const vendors = () => {
     const [modalVisible, setModalVisible] = useState(false)
     const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
     const [updatedTime, setUpdatedTime] = useState("")
+    const [checkedInCount, setCheckedInCount] = useState(0)
 
     const fetchVendors = async () => {
         try {
@@ -60,6 +61,8 @@ const vendors = () => {
           }));
             setvendorsState({ data:vendors, error: null });
             setFilteredData(vendors); // Set the initial filtered data
+            const checkInCount = vendors.filter(vendor => vendor.checkedIn).length
+            setCheckedInCount(checkInCount)
           }
         } catch (err: any) {
           setvendorsState({ data: null, error: err.message })
@@ -93,10 +96,19 @@ const vendors = () => {
           <Header backButton={true}/>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <StyledView className=" justify-center w-full items-center px-4">
-          <RefreshText time={updatedTime} />
-          <StyledText className="text-[#73D08D] text-2xl font-bold mb-0 text-center w-[75%]">
-              Vendors
-          </StyledText>
+            <RefreshText time={updatedTime} />
+            <StyledView className='flex-row w-[100%] justify-center'>
+            
+              <StyledText className="text-[#73D08D] text-2xl font-bold mb-0 text-center ml-2.5 pl-36">
+                  Vendors
+              </StyledText>
+              <StyledView className='j justify-end self-end flex-1'>
+                <StyledText className='t text-white text-xs text-right' >
+                  Checked In{"\n"} <StyledText className='text-[#73D08D] font-bold text-right'>{checkedInCount}/</StyledText>{vendorsState.data ? vendorsState.data?.length : 0}
+                </StyledText>
+              </StyledView>
+            
+            </StyledView>
           </StyledView>
           </TouchableWithoutFeedback>
           <StyledView className="flex-row justify-center w-full px-2 mt-4 mb-4 items-center self-center" style={{
@@ -156,9 +168,11 @@ const vendors = () => {
                             
                           })
                           item.checkedIn = false;
+                          setCheckedInCount((checkedInCount) => checkedInCount - 1)
                         } else {
                           await supabase.from('event_vendors').update({ checked_in: true }).eq('vendor_id', item.vendorId);
                           item.checkedIn = true;
+                          setCheckedInCount((checkedInCount) => checkedInCount + 1)
                         }
                         setRefresh((prev) => prev + 1);
                       }}
@@ -213,9 +227,11 @@ const vendors = () => {
                           
                         })
                         selectedVendor.checkedIn = false;
+                        setCheckedInCount((checkedInCount) => checkedInCount - 1)
                       } else {
                         await supabase.from('event_vendors').update({ checked_in: true }).eq('vendor_id', selectedVendor.vendorId);
                         selectedVendor.checkedIn = true;
+                        setCheckedInCount((checkedInCount) => checkedInCount + 1)
                       }
                       setRefresh((prev) => prev + 1);
                 }}
