@@ -104,7 +104,7 @@ const vendors = () => {
               </StyledText>
               <StyledView className='j justify-end self-end flex-1'>
                 <StyledText className='t text-white text-xs text-right' >
-                  Checked In{"\n"} <StyledText className='text-[#73D08D] font-bold text-right'>{checkedInCount}/</StyledText>{vendorsState.data ? vendorsState.data?.length : 0}
+                  Checked In{"\n"} <StyledText className='text-[#73D08D] font-bold text-right'>{checkedInCount}</StyledText>/{vendorsState.data ? vendorsState.data?.length : 0}
                 </StyledText>
               </StyledView>
             

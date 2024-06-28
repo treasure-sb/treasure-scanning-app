@@ -9,10 +9,10 @@ export type Props = {
 }
 const RefreshText: React.FC<Props> = ({ time }) => {
   return (
-    <StyledView className='w-full h-19 justify-top text-right mb-6'>
-        <StyledView className='flex-row-reverse flex-shrink w-full text-right items-center justify-start'>
-            <Image source={require('../assets/images/refresh-icon.png')} style={{marginLeft:4, alignItems:"flex-start", height:15, width: 15}} resizeMode='contain'/>
-            <StyledText className='text-right text-sm' style={{color:"#6A6A6A"}}>Pull down to refresh</StyledText>
+    <StyledView className='w-full justify-top text-right mb-6'>
+        <StyledView className='flex-row-reverse flex-shrink w-full text-right items-end justify-start'>
+            
+            <StyledText className='text-right text-sm' style={{color:"#6A6A6A"}}>Pull down to refresh <Image source={require('../assets/images/refresh-icon.png')} style={{marginLeft:4, alignItems:"flex-start", height:15, width: 15}} resizeMode='contain'/></StyledText>
         </StyledView>
         <StyledText className='text-right text-xs'style={{color:"#535252"}}>Last updated at {time}</StyledText>
     </StyledView>
