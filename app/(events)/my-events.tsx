@@ -107,7 +107,11 @@ const myEvents = () => {
                 }}
                 />
                 </TouchableHighlight>
-                <Text style={{color:"white", paddingBottom:20}} numberOfLines={2}>{item.name} {format(item.date, "MMMM do")}</Text>
+                <Text style={{color:"white", paddingBottom:0}} numberOfLines={1}>{item.name}
+                </Text>
+                <StyledView className="bg-[#535252] justify-bottom self-end justify-self-end w-max rounded-xl p-1 mb-5 mr-5">
+                <Text style={{color:"white", textAlign:"right", width:"100%"}}>{new Date(item.date as string).toLocaleDateString(undefined,{day: "numeric",month: "short",timeZone: "UTC"})}</Text>
+                </StyledView>
               </StyledView>
               
             }

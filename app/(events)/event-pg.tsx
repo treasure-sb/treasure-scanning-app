@@ -12,8 +12,7 @@ const StyledImage = styled(Image)
 
 const eventPg = () => {
     const {eventId, userId, eventName, eventDate} = useLocalSearchParams()
-    const d = new Date(eventDate as string)
-    const formattedDate = format(d, "MMMM do")
+
     
   return (
     <StyledSafeAreaView 
@@ -25,7 +24,7 @@ const eventPg = () => {
         <Header backButton={true} buttonTitle='My Events'/>
         <StyledView className=" justify-center w-full items-center px-4 mt-2 mb-10">
         <StyledText className="text-white text-2xl font-bold mb-0 text-center w-[75%]">
-            {eventName + " " + formattedDate}
+            {eventName}
         </StyledText>
         </StyledView>
         <StyledView className='f flex-row h-52 mb-4'>
