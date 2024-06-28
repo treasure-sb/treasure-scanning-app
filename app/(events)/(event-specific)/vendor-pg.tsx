@@ -99,10 +99,10 @@ const vendors = () => {
             <RefreshText time={updatedTime} />
             <StyledView className='flex-row w-[100%] justify-center'>
             
-              <StyledText className="text-[#73D08D] text-2xl font-bold mb-0 text-center ml-2.5 pl-36">
+              <StyledText className="text-[#73D08D] text-2xl font-bold mb-0 text-center">
                   Vendors
               </StyledText>
-              <StyledView className='j justify-end self-end flex-1'>
+              <StyledView className='j justify-end self-end flex-1 absolute right-1'>
                 <StyledText className='t text-white text-xs text-right' >
                   Checked In{"\n"} <StyledText className='text-[#73D08D] font-bold text-right'>{checkedInCount}</StyledText>/{vendorsState.data ? vendorsState.data?.length : 0}
                 </StyledText>
