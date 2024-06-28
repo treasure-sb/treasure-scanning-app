@@ -6,7 +6,6 @@ import { styled } from "nativewind";
 import { supabase, userID } from "@/lib/supabase";
 import { createClient } from "@supabase/supabase-js";
 import { router, useLocalSearchParams, useRouter } from "expo-router";
-import { format } from "date-fns";
 
 const StyledView = styled(View);
 const StyledSafeAreaView = styled(SafeAreaView);
@@ -38,14 +37,14 @@ const myEvents = () => {
         if (role?.role === "admin"){
           const { data, error } = await supabase
           .from('events')
-          .select('name, poster_url, date, id');
+          .select('name, poster_url, date, id').gte("date", new Date().toLocaleString(undefined, {year:"numeric", day:"numeric", month:"numeric"}));
           tempData = {data, error}
         }
         else{
         const { data, error } = await supabase
         .from('events')
         .select('name, poster_url, date, id')
-        .eq('organizer_id', userID as NonNullable<string | string[] | undefined>);
+        .eq('organizer_id', userID as NonNullable<string | string[] | undefined>).gte("date", new Date().toLocaleString(undefined, {year:"numeric", day:"numeric", month:"numeric"}));
         tempData = {data, error}
       }
       const { data, error } = tempData
@@ -53,7 +52,7 @@ const myEvents = () => {
         if (error) {
           setEventsState({ data: null, error: error.message });
         } else {
-          const sortedData = data?.sort((a, b) => (b.date as string).localeCompare(a.date as string));
+          const sortedData = data?.sort((a, b) => (a.date as string).localeCompare(b.date as string));
           setEventsState({ data, error: null });
         }
       } catch (err: any) {
@@ -109,7 +108,7 @@ const myEvents = () => {
                 </TouchableHighlight>
                 <Text style={{color:"white", paddingBottom:0}} numberOfLines={1}>{item.name}
                 </Text>
-                <StyledView className="bg-[#535252] justify-bottom self-end justify-self-end w-max rounded-xl p-1 mb-5 mr-5">
+                <StyledView className="bg-[#535252] justify-bottom self-end justify-self-end w-max rounded-xl p-1 mb-2 mr-5">
                 <Text style={{color:"white", textAlign:"right", width:"100%"}}>{new Date(item.date as string).toLocaleDateString(undefined,{day: "numeric",month: "short",timeZone: "UTC"})}</Text>
                 </StyledView>
               </StyledView>
