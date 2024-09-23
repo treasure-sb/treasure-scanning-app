@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Treasure-Ticket-Scanner",
-    "slug": "Treasure-Ticket-Scanner",
-    "version": "1.0.0",
+    "name": "Treasure For Hosts",
+    "slug": "Treasure-For-Hosts",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -10,10 +10,12 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1D1D1D",
+      "width": "85%"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ontreasure.treasureforhosts"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +25,8 @@
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.ontreasure.treasureforhosts"
     },
     "web": {
       "bundler": "metro",
@@ -47,8 +50,14 @@
         "origin": false
       },
       "eas": {
-        "projectId": "5d89c2f1-0370-404e-b056-be750fbf3f6f"
+        "projectId": "5330802c-38bd-486e-ae0d-414ab7ad7583"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/5330802c-38bd-486e-ae0d-414ab7ad7583"
     }
   }
 }
