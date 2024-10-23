@@ -40,19 +40,32 @@ const myEvents = () => {
           .single();
         let tempData;
         if (role?.role === "admin") {
-          const { data, error } = await supabase
-            .from("events")
-            .select("name, poster_url, min_date, id")
-            .gte(
-              "min_date",
-              new Date().toLocaleString(undefined, {
-                year: "numeric",
-                day: "numeric",
-                month: "numeric",
-              })
-            );
-
-          tempData = { data, error };
+          if (userID == "ebae30b8-f783-4ef6-971b-23a050bc6d7b") {
+            const { data, error } = await supabase
+              .from("events")
+              .select(
+                "event_roles!inner(user_id, role), name, poster_url, min_date, id"
+              )
+              .eq(
+                "event_roles.user_id",
+                "09d46afd-9633-4681-8e4d-0f78e8cd087a"
+              );
+            console.log(data, error);
+            tempData = { data, error };
+          } else {
+            const { data, error } = await supabase
+              .from("events")
+              .select("name, poster_url, min_date, id")
+              .gte(
+                "min_date",
+                new Date().toLocaleString(undefined, {
+                  year: "numeric",
+                  day: "numeric",
+                  month: "numeric",
+                })
+              );
+            tempData = { data, error };
+          }
         } else {
           const { data: eventRolesData, error: eventRolesError } =
             await supabase

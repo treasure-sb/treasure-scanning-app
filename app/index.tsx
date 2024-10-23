@@ -1,9 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { Text, View, Image, ScrollView, Button } from "react-native";
 import { withExpoSnack, styled } from "nativewind";
-import { router } from "expo-router";
+import { Redirect, router, useLocalSearchParams } from "expo-router";
 import CustomButton from "@/components/CustomButton";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { supabase } from "@/lib/supabase";
+import { useEffect, useState } from "react";
+import { set } from "date-fns";
 
 const StyledView = styled(View);
 const StyledSafeAreaView = styled(SafeAreaView);
@@ -11,6 +14,28 @@ const StyledText = styled(Text);
 const StyledImage = styled(Image);
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userID, setUserID] = useState<string | null>(null);
+  useEffect(() => {
+    async function checkUser() {
+      const { data, error } = await supabase.auth.getSession();
+      if (data.session !== null) {
+        console.log(data);
+        setUserID(data.session.user.id);
+        setIsLoggedIn(true);
+        console.log(data.session.user.id);
+      }
+    }
+    checkUser();
+  }, []);
+  useEffect(() => {
+    if (isLoggedIn && userID) {
+      router.push({
+        pathname: "../(events)/my-events",
+        params: { userID: userID },
+      });
+    }
+  }, [isLoggedIn, userID]);
   return (
     <StyledSafeAreaView
       className="flex-1 items-center justify-center"

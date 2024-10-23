@@ -2,7 +2,7 @@
   "expo": {
     "name": "Treasure For Hosts",
     "slug": "Treasure-For-Hosts",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -38,7 +38,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+          "cameraPermission": "Your camera is used to scan ticket QR codes."
         }
       ]
     ],

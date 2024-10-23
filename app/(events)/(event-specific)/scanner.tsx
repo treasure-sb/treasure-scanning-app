@@ -82,7 +82,7 @@ const Scanner = () => {
           const { data, error } = await supabase
             .from("event_tickets")
             .select(
-              "profiles(first_name, last_name), events(organizer_id), event_tickets_dates(event_dates!inner(date), valid, event_dates_id, id)"
+              "profiles(first_name, last_name), event_tickets_dates(event_dates!inner(date), valid, event_dates_id, id)"
             )
             .eq("id", ticketId)
             .single();
@@ -94,7 +94,6 @@ const Scanner = () => {
             const tickets: Ticket = {
               userName: `${data.profiles?.first_name} ${data.profiles?.last_name}`,
               ticketId: ticketId,
-              organizerId: data.events?.organizer_id,
               dates: data.event_tickets_dates.reduce(
                 (
                   acc: { [date: string]: [boolean, string, string] },
