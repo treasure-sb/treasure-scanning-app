@@ -108,7 +108,6 @@ const vendors = () => {
       <Header backButton={true} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <StyledView className=" justify-center w-full items-center px-4">
-          <RefreshText time={updatedTime} />
           <StyledView className="flex-row w-[100%] justify-center">
             <StyledText className="text-[#73D08D] text-2xl font-bold mb-0 text-center">
               Vendors
@@ -146,6 +145,9 @@ const vendors = () => {
           value={searchQuery}
           onChangeText={(text) => setSearchQuery(text)}
         />
+      </StyledView>
+      <StyledView className="flex flex-row-reverse mx-3 justify-between">
+        <RefreshText time={updatedTime} />
       </StyledView>
       <StyledView className="flex-row width-full mt-4">
         <StyledText className="font-bold w-[33%] text-white text-sm pl-6">

@@ -9,15 +9,26 @@ export const userID = async() =>{
 }
 export const handleInfoSubmit = async(userInfo: string, useEmail: boolean) =>{
   let sendMsgData
+  const { data: existingUser, error: checkError } = await supabase
+    .from('profiles') 
+    .select('id')
+    .eq(useEmail ? 'email' : 'phone', useEmail? userInfo : `+1${userInfo}`)
+    .single()
+
+  if (checkError || !existingUser) {
+    console.log('User does not exist', checkError, existingUser)
+    return { error: 'User does not exist' }
+  }
   if(useEmail){sendMsgData = await supabase.auth.signInWithOtp({
     email:userInfo
   })
     console.log(sendMsgData)}
   else{
     const formattedPhoneNumber = `+1${userInfo}`
-    sendMsgData = await supabase.auth.signInWithOtp({
+    const {data, error} = await supabase.auth.signInWithOtp({
     phone:formattedPhoneNumber
     })
+    if (error) {console.log(error)}
   }}
 export const verifyMessageData = async(info: any, code:string, type : any) => {
   let verificationResult
@@ -62,7 +73,6 @@ export type Vendor = {
   checkedIn: boolean,
   vendorsAtTable: Number
 };
-
 export const supabase = createClient(supabaseUrl as string, supabaseAnonKey as string, {
   auth: {
     storage: AsyncStorage,
@@ -70,4 +80,5 @@ export const supabase = createClient(supabaseUrl as string, supabaseAnonKey as s
     persistSession: true,
     detectSessionInUrl: false,
   },
+  
 })

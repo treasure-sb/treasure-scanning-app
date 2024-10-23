@@ -3,22 +3,22 @@ import { supabase } from '@/lib/supabase'
 import { Tables } from "@/types/supabase";
 
 
-function getToday(dateValidityMap: DateValidityMap): [boolean, string, string] {
+function getToday(dateValidityMap: DateValidityMap): [boolean, string, string] | null {
   const today = new Date().toISOString().split("T")[0];
-  return dateValidityMap[today];
+  return dateValidityMap[today] || null; // Return null if today is not in the map
 }
+
 
 function getTicketByDate(dateValidityMap : DateValidityMap, date: string) : [boolean, string, string] {
   return dateValidityMap[date];
 }
 
 function isTodayValid(dateValidityMap: DateValidityMap): boolean {
-  // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split("T")[0];
-  // Check if today's date is in the map and is valid
-  if (!dateValidityMap[today]) return true
+  // Return false if today's date is not in the map
+  if (!dateValidityMap[today]) return true;
+  // Otherwise, return whether the ticket is valid
   return dateValidityMap[today][0];
-  
 }
 
 async function getEventDates(eventId: string): Promise<Tables<"event_dates">[]> {
