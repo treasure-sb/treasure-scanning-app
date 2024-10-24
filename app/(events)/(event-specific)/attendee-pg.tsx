@@ -7,9 +7,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
-  Image,
 } from "react-native";
-import { format } from "date-fns";
 import Icon from "react-native-vector-icons/EvilIcons";
 import React, { useCallback, useEffect, useState } from "react";
 import { styled } from "nativewind";
@@ -20,8 +18,7 @@ import Toast from "react-native-toast-message";
 import ParticipantModal from "@/components/ParticipantModal";
 import { formatPhoneNumber } from "@/components/formattedPhoneNumber";
 import RefreshText, { TimeDisplay } from "@/components/Refresh-text";
-import { getEventDates, getTicketByDate } from "@/lib/helpers/CheckInFuncs";
-import "../../../types/supabase";
+import { getEventDates } from "@/lib/helpers/CheckInFuncs";
 
 const StyledView = styled(View);
 const StyledSafeAreaView = styled(SafeAreaView);
@@ -53,63 +50,75 @@ const attendees = () => {
   const [eventDates, setEventDates] = useState<string[]>([]);
 
   const fetchEventInfo = async () => {
-    let dateInfo = (await getEventDates(eventID as NonNullable<string>)).map(
-      (date) => {
-        return date.date;
-      }
-    );
-    if (eventDates.length == 0) {
-      setEventDates(dateInfo);
-      setSelectedDate(dateInfo[0]);
-    }
-
     try {
+      const dateInfo = (await getEventDates(eventID as string)).map(
+        (date) => date.date
+      );
+
+      if (eventDates.length === 0) {
+        setEventDates(dateInfo);
+        setSelectedDate(dateInfo[0]);
+      }
+
       setUpdatedTime(TimeDisplay);
       const { data, error } = await supabase
         .from("event_tickets")
         .select(
           'profiles(first_name, last_name, email, phone), tickets("name"), id, event_tickets_dates(event_dates!inner(date), valid, event_dates_id, id)'
         )
-        .eq("event_id", eventID as NonNullable<string | string[] | undefined>);
+        .eq("event_id", eventID as string);
 
       if (error) {
         setticketsState({ data: null, error: error.message });
-        console.log("if", error.message);
-      } else {
-        const tickets: Ticket[] = data.map((item) => ({
-          userName: `${item.profiles?.first_name} ${item.profiles?.last_name}`,
-          ticketType: item.tickets?.name as string,
-          ticketId: item.id as string,
-          email: item.profiles?.email,
-          phone: item.profiles?.phone,
-          dates: item.event_tickets_dates.reduce((acc, dateItem) => {
-            acc[dateItem.event_dates.date] = [
-              dateItem.valid,
-              dateItem.event_dates_id,
-              dateItem.id as string,
-            ];
-            console.log("acc", acc);
-            return acc;
-          }, {} as DateValidityMap),
-        }));
+        console.log("Error fetching tickets:", error.message);
+        return;
+      }
 
-        setticketsState({ data: tickets, error: null });
-        setFilteredData(tickets.filter((item) => item.dates[selectedDate])); // Set the initial filtered data
+      const tickets: Ticket[] = data.map((item) => ({
+        userName: `${item.profiles?.first_name} ${item.profiles?.last_name}`,
+        ticketType: item.tickets?.name as string,
+        ticketId: item.id as string,
+        email: item.profiles?.email,
+        phone: item.profiles?.phone,
+        dates: item.event_tickets_dates.reduce((acc, dateItem) => {
+          acc[dateItem.event_dates.date] = [
+            dateItem.valid,
+            dateItem.event_dates_id,
+            dateItem.id as string,
+          ];
+          return acc;
+        }, {} as DateValidityMap),
+      }));
+
+      setticketsState({ data: tickets, error: null });
+      if (selectedDate) {
+        setFilteredData(tickets.filter((item) => item.dates[selectedDate]));
       }
     } catch (err: any) {
       setticketsState({ data: null, error: err.message });
-      console.log("catch", err.message);
+      console.log("Error in fetchEventInfo:", err.message);
     }
   };
+
   const handleCheckIn = useCallback(
     async (item: Ticket) => {
-      if (isCheckingIn[item.ticketId]) return; // Prevent multiple clicks
+      if (!selectedDate || !item.dates[selectedDate]) {
+        Toast.show({
+          type: "error",
+          text1: "Invalid Date",
+          text2: "No ticket information found for this date",
+          position: "bottom",
+        });
+        return;
+      }
+
+      if (isCheckingIn[item.ticketId]) return;
 
       setIsCheckingIn((prev) => ({ ...prev, [item.ticketId]: true }));
 
       try {
         const newStatus = !item.dates[selectedDate][0];
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from("event_tickets_dates")
           .update({
             valid: newStatus,
@@ -120,7 +129,6 @@ const attendees = () => {
 
         if (error) throw error;
 
-        // Update local state
         setticketsState((prevState) => ({
           ...prevState,
           data:
@@ -140,26 +148,17 @@ const attendees = () => {
             ) || null,
         }));
 
-        // Update checkedInCount
         setCheckedInCount((prev) => (newStatus ? prev - 1 : prev + 1));
 
-        if (!newStatus) {
-          Toast.show({
-            type: "success",
-            text1: "Attendee Checked In",
-            text2: `${item.userName} is checked in`,
-            position: "bottom",
-            visibilityTime: 2000,
-          });
-        } else {
-          Toast.show({
-            type: "success",
-            text1: "Attendee Checked Out",
-            text2: `${item.userName} is checked out`,
-            position: "bottom",
-            visibilityTime: 2000,
-          });
-        }
+        Toast.show({
+          type: "success",
+          text1: newStatus ? "Attendee Checked Out" : "Attendee Checked In",
+          text2: `${item.userName} is ${
+            newStatus ? "checked out" : "checked in"
+          }`,
+          position: "bottom",
+          visibilityTime: 2000,
+        });
       } catch (err) {
         console.error("Check-in error:", err);
         Toast.show({
@@ -167,7 +166,6 @@ const attendees = () => {
           text1: "Check-in Failed",
           text2: "Please try again",
           position: "bottom",
-          visibilityTime: 2000,
         });
       } finally {
         setIsCheckingIn((prev) => ({ ...prev, [item.ticketId]: false }));
@@ -175,52 +173,104 @@ const attendees = () => {
     },
     [selectedDate, isCheckingIn]
   );
+
   useEffect(() => {
     if (ticketsState.data && eventDates.length > 0) {
       setSelectedDate(eventDates[0]);
     }
   }, [eventDates]);
+
   useEffect(() => {
-    const load = async () => {
-      await fetchEventInfo();
-    };
-    console.log("loading");
-    load();
+    fetchEventInfo();
   }, []);
+
   useEffect(() => {
     if (ticketsState.data && selectedDate) {
-      console.log("Selected Date 2: ", selectedDate);
-      try {
-        const checkedIn = ticketsState.data.filter(
-          (ticket) =>
-            ticket.dates[selectedDate] && !ticket.dates[selectedDate][0]
-        ).length;
-        console.log("checked in 2: ", checkedIn);
-        setCheckedInCount(checkedIn);
-      } catch (err) {
-        console.log("error", err);
-      }
+      const checkedIn = ticketsState.data.filter(
+        (ticket) => ticket.dates[selectedDate] && !ticket.dates[selectedDate][0]
+      ).length;
+      setCheckedInCount(checkedIn);
     }
   }, [ticketsState.data, selectedDate]);
-  useEffect(() => {
-    if (searchQuery && ticketsState.data) {
-      const filtered = ticketsState.data.filter(
-        (ticket) =>
-          ticket.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          ticket.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (ticket.phone?.toLowerCase().includes(searchQuery.toLowerCase()) &&
-            ticket.dates[selectedDate] &&
-            ticket.dates[selectedDate][0])
-      );
 
-      setFilteredData(filtered);
-    } else {
-      const filtered = ticketsState.data
-        ? ticketsState.data.filter((item) => item.dates[selectedDate])
-        : ticketsState.data;
-      setFilteredData(filtered);
-    }
+  useEffect(() => {
+    if (!selectedDate) return;
+
+    const filtered = ticketsState.data
+      ?.filter((ticket) => {
+        if (!ticket.dates[selectedDate]) return false;
+
+        if (searchQuery) {
+          return (
+            ticket.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            ticket.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            ticket.phone?.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+        }
+        return true;
+      })
+      .filter((item) => item.dates[selectedDate]);
+
+    setFilteredData(filtered || null);
   }, [searchQuery, ticketsState.data, selectedDate]);
+
+  const renderItem = ({ item }: { item: Ticket }) => {
+    if (!selectedDate || !item.dates[selectedDate]) return null;
+
+    return (
+      <StyledView
+        className="flex flex-row w-full items-center justify-center"
+        style={{ height: 75 }}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            setSelectedTicket(item);
+            setModalVisible(true);
+          }}
+          style={{ width: "100%" }}
+        >
+          <StyledView
+            className="flex-row w-[99%] h-full bg-[#2A2424] items-center pl-1"
+            style={{ borderRadius: 30 }}
+          >
+            <StyledText className="w-[33%] text-white text-left text-ellipsis align-middle text-md pl-4">
+              {item.userName}
+            </StyledText>
+            <StyledText className="w-[33%] text-white text-center text-ellipsis align-middle text-md pl-[2px]">
+              {item.ticketType}
+            </StyledText>
+            <TouchableOpacity
+              onPress={() => handleCheckIn(item)}
+              activeOpacity={0.7}
+              style={{
+                flex: 1,
+                borderRadius: 30,
+                backgroundColor: item.dates[selectedDate][0]
+                  ? "#73D08D"
+                  : "#535252",
+                width: 80,
+                height: 50,
+                marginLeft: 15,
+                marginRight: 4,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <StyledText
+                style={{
+                  color: item.dates[selectedDate][0] ? "black" : "white",
+                  fontWeight: "bold",
+                  fontSize: 16,
+                }}
+              >
+                {item.dates[selectedDate][0] ? "Check In" : "Checked In"}
+              </StyledText>
+            </TouchableOpacity>
+          </StyledView>
+        </TouchableOpacity>
+      </StyledView>
+    );
+  };
 
   return (
     <StyledSafeAreaView
@@ -232,23 +282,24 @@ const attendees = () => {
     >
       <Header backButton={true} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <StyledView className=" justify-center w-full items-center px-4 mt-0">
+        <StyledView className="justify-center w-full items-center px-4 mt-0">
           <StyledView className="flex-row w-[100%] justify-center">
             <StyledText className="text-[#73D08D] text-2xl font-bold mb-0 text-center">
               Attendees
             </StyledText>
-            <StyledView className="j justify-end self-end flex-1 absolute right-1">
-              <StyledText className="t text-white text-xs text-right">
+            <StyledView className="justify-end self-end flex-1 absolute right-1">
+              <StyledText className="text-white text-xs text-right">
                 Checked In{"\n"}{" "}
                 <StyledText className="text-[#73D08D] font-bold text-right">
                   {checkedInCount}
                 </StyledText>
-                /{ticketsState.data ? ticketsState.data?.length : 0}
+                /{ticketsState.data?.length || 0}
               </StyledText>
             </StyledView>
           </StyledView>
         </StyledView>
       </TouchableWithoutFeedback>
+
       <StyledView
         className="flex-row justify-center w-full px-2 mt-4 mb-4 items-center self-center"
         style={{
@@ -268,9 +319,10 @@ const attendees = () => {
           }}
           placeholder="Search by name, email, or phone..."
           value={searchQuery}
-          onChangeText={(text) => setSearchQuery(text)}
+          onChangeText={setSearchQuery}
         />
       </StyledView>
+
       <StyledView className="flex flex-row mx-3 justify-between">
         <FlatList
           horizontal={true}
@@ -278,21 +330,19 @@ const attendees = () => {
           scrollToOverflowEnabled={true}
           style={{ flexGrow: 1 }}
           onScrollBeginDrag={Keyboard.dismiss}
-          extraData={[selectedDate, eventDates, filteredData]}
+          keyExtractor={(item) => item}
           renderItem={({ item }) => (
             <StyledView
               style={{ flex: 1, flexDirection: "row", marginRight: 12 }}
             >
               <TouchableOpacity
-                onPress={() => {
-                  console.log("Selected Date: ", item);
-                  setSelectedDate(item);
-                }}
+                onPress={() => setSelectedDate(item)}
                 activeOpacity={0.7}
                 style={{
                   flex: 1,
                   borderRadius: 10,
-                  backgroundColor: item == selectedDate ? "#73D08D" : "#535252",
+                  backgroundColor:
+                    item === selectedDate ? "#73D08D" : "#535252",
                   width: 70,
                   height: 40,
                   alignItems: "center",
@@ -302,12 +352,12 @@ const attendees = () => {
               >
                 <StyledText
                   style={{
-                    color: item == selectedDate ? "black" : "white",
+                    color: item === selectedDate ? "black" : "white",
                     fontWeight: "bold",
                     fontSize: 16,
                   }}
                 >
-                  {new Date(item as string).toLocaleDateString(undefined, {
+                  {new Date(item).toLocaleDateString(undefined, {
                     day: "numeric",
                     month: "short",
                     timeZone: "UTC",
@@ -319,6 +369,7 @@ const attendees = () => {
         />
         <RefreshText time={updatedTime} />
       </StyledView>
+
       <StyledView className="flex flex-row mt-4 w-full px-8 mb-1">
         <StyledText className="w-[33%] font-bold text-white text-sm">
           Name
@@ -333,109 +384,62 @@ const attendees = () => {
 
       <FlatList
         data={filteredData || []}
-        extraData={[selectedDate, eventDates, filteredData]}
-        renderItem={({ item }) => (
-          <StyledView
-            className="flex flex-row w-full items-center justify-center"
-            style={{ height: 75 }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                setSelectedTicket(item);
-                setModalVisible(true);
-              }}
-              style={{ width: "100%" }}
-            >
-              <StyledView
-                className="flex-row w-[99%] h-full bg-[#2A2424] items-center pl-1"
-                style={{ borderRadius: 30 }}
-              >
-                <StyledText className="w-[33%] text-white text-left text-ellipsis align-middle text-md pl-4">
-                  {item.userName}
-                </StyledText>
-                <StyledText className="w-[33%] text-white text-center text-ellipsis align-middle text-md pl-[2px]">
-                  {item.ticketType}
-                </StyledText>
-                <TouchableOpacity
-                  onPress={() => handleCheckIn(item)}
-                  activeOpacity={0.7}
-                  style={{
-                    flex: 1,
-                    borderRadius: 30,
-                    backgroundColor: (
-                      item.dates[selectedDate][0] ? true : false
-                    )
-                      ? "#73D08D"
-                      : "#535252",
-                    width: 80,
-                    height: 50,
-                    marginLeft: 15,
-                    marginRight: 4,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <StyledText
-                    style={{
-                      color: (item.dates[selectedDate][0] ? true : false)
-                        ? "black"
-                        : "white",
-                      fontWeight: "bold",
-                      fontSize: 16,
-                    }}
-                  >
-                    {(item.dates[selectedDate][0] ? true : false)
-                      ? "Check In"
-                      : "Checked In"}
-                  </StyledText>
-                </TouchableOpacity>
-              </StyledView>
-            </TouchableOpacity>
-          </StyledView>
-        )}
+        renderItem={renderItem}
         refreshing={isRefreshing}
         style={{ minWidth: "100%" }}
-        onRefresh={() => {
+        onRefresh={async () => {
           setIsRefreshing(true);
-          fetchEventInfo();
+          await fetchEventInfo();
           setIsRefreshing(false);
         }}
         keyExtractor={(item) => item.ticketId}
       />
-      {selectedTicket && (
+
+      {selectedTicket && selectedDate && (
         <ParticipantModal
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
           onCheckIn={async () => {
-            if (selectedTicket.dates[selectedDate]) {
-              if (selectedTicket.dates[selectedDate][0]) {
-                await supabase
-                  .from("event_tickets_dates")
-                  .update({ valid: false })
-                  .eq("id", selectedTicket.dates[selectedDate][2]);
-                selectedTicket.dates[selectedDate][0] = false;
-                setCheckedInCount((checkedInCount) => checkedInCount + 1);
-              } else {
-                await supabase
-                  .from("event_tickets_dates")
-                  .update({ valid: true })
-                  .eq("id", selectedTicket.dates[selectedDate][2]);
-                Toast.show({
-                  type: "success",
-                  text1: "Attendee Was Checkout Out",
-                  text2: selectedTicket.userName + " is checked out",
-                  position: "bottom",
-                  visibilityTime: 2000,
-                });
-                selectedTicket.dates[selectedDate][0] = true;
-                setCheckedInCount((checkedInCount) => checkedInCount - 1);
-              }
-              setRefresh((prev) => prev + 1);
-            } else {
+            if (!selectedTicket.dates[selectedDate]) {
               Toast.show({
                 type: "error",
                 text1: "Date Entry Missing",
                 text2: "No entry found for the selected date.",
+                position: "bottom",
+                visibilityTime: 2000,
+              });
+              return;
+            }
+
+            const newStatus = !selectedTicket.dates[selectedDate][0];
+            try {
+              await supabase
+                .from("event_tickets_dates")
+                .update({ valid: newStatus })
+                .eq("id", selectedTicket.dates[selectedDate][2]);
+
+              selectedTicket.dates[selectedDate][0] = newStatus;
+              setCheckedInCount((prev) => (newStatus ? prev - 1 : prev + 1));
+
+              Toast.show({
+                type: "success",
+                text1: newStatus
+                  ? "Attendee Was Checked Out"
+                  : "Attendee Was Checked In",
+                text2: `${selectedTicket.userName} is ${
+                  newStatus ? "checked out" : "checked in"
+                }`,
+                position: "bottom",
+                visibilityTime: 2000,
+              });
+
+              setRefresh((prev) => prev + 1);
+            } catch (error) {
+              console.error("Error updating check-in status:", error);
+              Toast.show({
+                type: "error",
+                text1: "Update Failed",
+                text2: "Failed to update check-in status",
                 position: "bottom",
                 visibilityTime: 2000,
               });
@@ -444,8 +448,8 @@ const attendees = () => {
           name={selectedTicket.userName}
           contact={
             selectedTicket.phone
-              ? formatPhoneNumber(selectedTicket.phone.substring(2) as string)
-              : (selectedTicket.email as string)
+              ? formatPhoneNumber(selectedTicket.phone.substring(2))
+              : selectedTicket.email || "No contact information"
           }
           checkedIn={
             selectedTicket.dates[selectedDate]
