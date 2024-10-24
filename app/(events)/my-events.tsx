@@ -6,6 +6,7 @@ import { styled } from "nativewind";
 import { supabase, userID } from "@/lib/supabase";
 import { createClient } from "@supabase/supabase-js";
 import { router, useLocalSearchParams, useRouter } from "expo-router";
+import "../../types/supabase";
 
 const StyledView = styled(View);
 const StyledSafeAreaView = styled(SafeAreaView);
@@ -15,7 +16,7 @@ const StyledImage = styled(Image);
 type Event = {
   name: string;
   poster_url: string;
-  date: string;
+  min_date: string;
   id: string;
 };
 type EventsState = {
@@ -39,15 +40,17 @@ const myEvents = () => {
           .single();
         let tempData;
         if (role?.role === "admin") {
-          if (userID == "c6326ee3-3bf4-4106-a003-2820ab9c9666") {
+          if (userID == "ebae30b8-f783-4ef6-971b-23a050bc6d7b") {
             const { data, error } = await supabase
               .from("events")
               .select(
                 "event_roles!inner(user_id, role), name, poster_url, min_date, id"
               )
-              .or(
-                "event_roles.user_id.eq.a12b2cf6-9798-477c-a1a5-01135ee1c612,event_roles.user_id.eq.09d46afd-9633-4681-8e4d-0f78e8cd087a"
+              .eq(
+                "event_roles.user_id",
+                "09d46afd-9633-4681-8e4d-0f78e8cd087a"
               );
+            console.log(data, error);
             tempData = { data, error };
           } else {
             const { data, error } = await supabase
@@ -61,7 +64,6 @@ const myEvents = () => {
                   month: "numeric",
                 })
               );
-
             tempData = { data, error };
           }
         } else {
@@ -99,8 +101,8 @@ const myEvents = () => {
         if (error) {
           setEventsState({ data: null, error: error.message });
         } else {
-          const sortedData = data?.sort((a, b) =>
-            (a.date as string).localeCompare(b.date as string)
+          data?.sort((a, b) =>
+            (a.min_date as string).localeCompare(b.min_date as string)
           );
           setEventsState({ data, error: null });
           console.log(data);
@@ -134,7 +136,7 @@ const myEvents = () => {
           Click an event to start scanning tickets!
         </StyledText>
       </StyledView>
-      <StyledView className="p-1 items-center flex-1">
+      <StyledView className="p-1 flex-1">
         <FlatList
           data={eventsState.data}
           numColumns={2}
@@ -153,12 +155,12 @@ const myEvents = () => {
               <TouchableHighlight
                 onPress={() => {
                   router.push({
-                    pathname: "event-pg",
+                    pathname: "/event-pg",
                     params: {
                       eventId: item.id,
                       userId: userID,
                       eventName: item.name,
-                      eventDate: item.date,
+                      eventDate: item.min_date,
                     },
                   });
                 }}
@@ -172,7 +174,7 @@ const myEvents = () => {
                   style={{
                     width: 180,
                     height: 180,
-                    resizeMode: "center",
+                    resizeMode: "cover",
                     borderRadius: 40,
                     overflow: "hidden",
                   }}
@@ -188,16 +190,19 @@ const myEvents = () => {
                 <Text
                   style={{ color: "white", textAlign: "right", width: "100%" }}
                 >
-                  {new Date(item.date as string).toLocaleDateString(undefined, {
-                    day: "numeric",
-                    month: "short",
-                    timeZone: "UTC",
-                  })}
+                  {new Date(item.min_date as string).toLocaleDateString(
+                    undefined,
+                    {
+                      day: "numeric",
+                      month: "short",
+                      timeZone: "UTC",
+                    }
+                  )}
                 </Text>
               </StyledView>
             </StyledView>
           )}
-          keyExtractor={(item) => item.name + item.date}
+          keyExtractor={(item) => item.name + item.min_date}
         />
       </StyledView>
     </StyledSafeAreaView>
